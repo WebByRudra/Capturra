@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Capturra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/login.css">
+</head>
+
+<body class="bg-gray-50">
+
+<nav class="bg-white shadow-sm fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center mr-3">
+                        <span class="text-white font-bold text-lg">C</span>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold text-gray-900">Capturra</span>
+                        <div class="text-xs text-gray-500 -mt-1">Where Creators Shine</div>
+                    </div>
+                </div>
+            </div>
+            <a href="index.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</nav>
+
+<section class="min-h-screen flex flex-col justify-center pt-24 pb-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Join Capturra</h2>
+        <p class="text-gray-600">Create your account and start shining</p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10">
+
+            <!-- ✅ FIXED FORM -->
+            <form id="signupForm" method="post" class="space-y-6">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">First name</label>
+                        <input name="first_name" type="text" required class="w-full px-4 py-3 border rounded-lg"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Last name</label>
+                        <input name="last_name" type="text" required class="w-full px-4 py-3 border rounded-lg"/>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input name="username" type="text" required class="w-full px-4 py-3 border rounded-lg"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input name="email" type="email" required class="w-full px-4 py-3 border rounded-lg"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input name="password" type="password" required class="w-full px-4 py-3 border rounded-lg"/>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">I am a</label>
+                    <select name="role" required class="w-full px-4 py-3 border rounded-lg">
+                        <option value="">Select role</option>
+                        <option value="photographer">Photographer</option>
+                        <option value="client">Client</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-3 text-white gradient-bg rounded-lg">
+                    Create Account
+                </button>
+
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <a href="login.html" class="text-purple-600 font-medium">Sign In</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ✅ FIXED JAVASCRIPT -->
+<script>
+document.getElementById("signupForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("http://localhost:8888/Capturra/api/auth/signup.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.status) {
+            window.location.href = "login.html";
+        }
+    })
+    .catch(err => {
+        alert("Error occurred");
+        console.error(err);
+    });
+});
+</script>
+
+</body>
+</html>
