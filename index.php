@@ -1,4 +1,4 @@
 <?php
-header("Location: 1.html");
+header("Location: public/1.html");
 exit();
 ?>
