@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/auth.php";
+require_once($_SERVER['DOCUMENT_ROOT'] . '/capturra/includes/auth.php');
 requireRole("client");
 
 $username = $_SESSION['username'];
@@ -186,15 +186,7 @@ $name     = $_SESSION['name'];
                 </div>
 
                 <!-- Upload Shortcut -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">Quick Upload</h3>
-                    <div class="upload-zone rounded-lg p-6 text-center cursor-pointer" onclick="uploadPhoto()">
-                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                        <p class="text-sm text-gray-600">Drag & drop or click to upload</p>
-                    </div>
-                </div>
+
 
                 <!-- Quick Links -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -237,12 +229,9 @@ $name     = $_SESSION['name'];
   Welcome back, <?php echo htmlspecialchars($name); ?> 👋
 </h1>
 
-                    <p class="text-purple-100 mb-6">Ready to capture and share amazing moments?</p>
+                    <p class="text-purple-100 mb-6">Explore photographers and book your next event effortlessly.</p>
                     <div class="flex flex-wrap gap-4">
-                        <button onclick="uploadPhoto()" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center space-x-2">
-                            <span>📷</span>
-                            <span>Upload Photo</span>
-                        </button>
+                        
                         <button onclick="viewPortfolio()" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors">
                             View Portfolio
                         </button>
@@ -546,9 +535,7 @@ $name     = $_SESSION['name'];
         }
 
         // Hero section functions
-        function uploadPhoto() {
-            alert('Photo upload dialog would open here! 📷');
-        }
+       
 
         function viewPortfolio() {
             alert('Navigating to your portfolio!');
