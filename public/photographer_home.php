@@ -196,6 +196,8 @@ if (!$result) {
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">My Portfolio</a>
                     
+                    
+
                    <div class="relative inline-block">
     <div class="relative cursor-pointer group" onclick="toggleMessages(event)">
         <span class="text-2xl group-hover:scale-110 transition-transform inline-block">💬</span>
