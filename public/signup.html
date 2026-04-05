@@ -3,122 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Capturra</title>
+    <title>Sign Up | Capturra</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow: hidden; }
+        /* Reversed Split Layout for Signup */
+        .auth-container { display: flex; flex-direction: row-reverse; height: 100vh; width: 100vw; }
+        .side-visual { width: 50%; height: 100%; background: linear-gradient(135deg, #8b5cf6 0%, #1e1b4b 100%); display: flex; justify-content: center; align-items: center; position: relative; }
+        .side-form { width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; overflow-y: auto; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 40px; text-align: center; color: white; width: 80%; }
+        .input-field { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; width: 100%; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #8b5cf6; background: white; }
+        .btn-gradient { background: linear-gradient(90deg, #7c3aed, #a855f7); color: white; font-weight: bold; width: 100%; padding: 14px; border-radius: 12px; transition: 0.3s; }
+
+        /* Custom fix for the dropdown */
+select.input-field {
+    appearance: none; /* Default arrow hatane ke liye */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gray" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em;
+    padding-right: 2.5rem; /* Arrow ke liye jagah */
+}
+
+    </style>
 </head>
+<body>
+    <div class="auth-container">
+        <div class="side-visual">
+            <div class="glass-card">
+                <h2 class="text-3xl font-black mb-4">Already a member?</h2>
+                <p class="text-white/70 mb-8">Sign in back to your account to continue where you left off.</p>
+                <a href="login.html" class="border-2 border-white px-8 py-3 rounded-full font-bold uppercase tracking-widest text-[11px] hover:bg-white hover:text-purple-600 transition-all inline-block">Log In</a>
+            </div>
+        </div>
 
-<body class="bg-gray-50">
+        <div class="side-form">
+            <div class="w-full max-w-sm px-6 py-10">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-black text-slate-900">Join Capturra</h1>
+                    <p class="text-slate-500 text-sm mt-1">Create your account and start shining</p>
+                </div>
 
-<nav class="bg-white shadow-sm fixed w-full top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 flex items-center">
-                    <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center mr-3">
-                        <span class="text-white font-bold text-lg">C</span>
+                <form action="signup.php" method="POST" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">First name</label>
+                            <input type="text" name="first_name" class="input-field" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Last name</label>
+                            <input type="text" name="last_name" class="input-field" required>
+                        </div>
                     </div>
                     <div>
-                        <span class="text-2xl font-bold text-gray-900">Capturra</span>
-                        <div class="text-xs text-gray-500 -mt-1">Where Creators Shine</div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+                        <input type="text" name="username" class="input-field" required>
                     </div>
-                </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                        <input type="email" name="email" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                        <input type="password" name="password" class="input-field" required>
+                    </div>
+                   <div>
+    <label class="block text-xs font-bold text-slate-700 mb-1">I am a</label>
+    <select name="role" class="input-field cursor-pointer" required>
+        <option value="" disabled selected>Select role</option>
+        <option value="photographer">Photographer</option>
+        <option value="client">Client</option>
+    </select>
+</div>
+                    <button type="submit" class="btn-gradient mt-4">Create Account</button>
+                </form>
             </div>
-            <a href="index.html" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">
-                Back to Home
-            </a>
         </div>
     </div>
-</nav>
-
-<section class="min-h-screen flex flex-col justify-center pt-24 pb-12 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <h2 class="text-3xl font-bold text-gray-900 mb-2">Join Capturra</h2>
-        <p class="text-gray-600">Create your account and start shining</p>
-    </div>
-
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10">
-
-            <!-- ✅ FIXED FORM -->
-            <form id="signupForm" method="post" class="space-y-6">
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">First name</label>
-                        <input name="first_name" type="text" required class="w-full px-4 py-3 border rounded-lg"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Last name</label>
-                        <input name="last_name" type="text" required class="w-full px-4 py-3 border rounded-lg"/>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                    <input name="username" type="text" required class="w-full px-4 py-3 border rounded-lg"/>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input name="email" type="email" required class="w-full px-4 py-3 border rounded-lg"/>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input name="password" type="password" required class="w-full px-4 py-3 border rounded-lg"/>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">I am a</label>
-                    <select name="role" required class="w-full px-4 py-3 border rounded-lg">
-                        <option value="">Select role</option>
-                        <option value="photographer">Photographer</option>
-                        <option value="client">Client</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="w-full py-3 text-white gradient-bg rounded-lg">
-                    Create Account
-                </button>
-
-            </form>
-
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">
-                    Already have an account?
-                    <a href="login.html" class="text-purple-600 font-medium">Sign In</a>
-                </p>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- ✅ FIXED JAVASCRIPT -->
-<script>
-document.getElementById("signupForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-
-    fetch("http://localhost:8888/Capturra/api/auth/signup.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        if (data.status) {
-            window.location.href = "login.html";
-        }
-    })
-    .catch(err => {
-        alert("Error occurred");
-        console.error(err);
-    });
-});
-</script>
-
 </body>
 </html>
