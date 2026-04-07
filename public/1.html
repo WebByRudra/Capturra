@@ -1,162 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Capturra – Where Creators Shine</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capturra – Where Creators Shine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:'Montserrat',sans-serif;
-    background:#000;
-    color:#fff;
-    overflow-x:hidden;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #050505;
+            color: #fff;
+            overflow-x: hidden;
+        }
 
-/* ================= HERO ================= */
-.hero-section{
-    position:relative;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    perspective:1200px;
-    overflow:hidden;
-}
+        /* ================= THE STICKY LOGO ================= */
+        .sticky-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            pointer-events: none; /* Let clicks pass through to content */
+        }
 
-/* Background slideshow */
-.background-slideshow{
-    position:absolute;
-    inset:0;
-    z-index:-3;
-}
-.background-slide{
-    position:absolute;
-    inset:0;
-    background-size:cover;
-    background-position:center;
-    opacity:0;
-    transition:opacity 2s ease;
-}
-.background-slide.active{opacity:1}
-.background-slide:nth-child(1){background-image:url('../assets/images/s1.jpeg')}
-.background-slide:nth-child(2){background-image:url('../assets/images/s2.jpeg')}
-.background-slide:nth-child(3){background-image:url('../assets/images/s3.jpeg')}
-.background-slide:nth-child(4){background-image:url('../assets/images/s4.jpeg')}
-.background-slide:nth-child(5){background-image:url('../assets/images/s5.jpeg')}
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3.5rem, 12vw, 7rem);
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            margin: 0;
+            transition: transform 0.1s ease;
+        }
 
-/* Overlay + grain */
-.hero-section::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:-2;
-}
-.hero-section::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:url("https://grainy-gradients.vercel.app/noise.svg");
-    opacity:.06;
-    pointer-events:none;
-    z-index:2;
-}
+        .hero-tagline {
+            font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
 
-/* Hero content */
-.hero-content{
-    z-index:3;
-}
-.hero-title{
-    font-size:4rem;
-    letter-spacing:2px;
-}
-.hero-tagline{
-    font-size:2rem;
-    margin-top:15px;
-    opacity:.85;
-}
+        /* ================= SECTIONS ================= */
+        .hero-trigger {
+            height: 100vh; /* This creates the space for the first "slide" */
+        }
 
-/* ================= SECTIONS ================= */
-section{padding:90px 20px}
-.container{max-width:1200px;margin:auto}
+        section { 
+            padding: 140px 20px; 
+            position: relative; 
+            z-index: 150; /* Higher than sticky container so content goes OVER it */
+            background: #050505; 
+        }
 
-.section-title{
-    font-size:2.5rem;
-    text-align:center;
-    margin-bottom:60px;
-    color:#111;
-}
+        .background-slideshow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
 
-/* ================= FEATURES ================= */
-.features-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:30px;
-}
-.feature-card{
-    background:#f5f5f5;
-    color:#111;
-    padding:35px;
-    border-radius:18px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
-}
-.feature-icon{font-size:3rem;margin-bottom:20px}
+        .background-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        .background-slide.active { opacity: 0.4; } /* Lower opacity for better readability */
 
-/* ================= COMMENTS ================= */
-.comments-section{max-width:850px;margin:auto}
-.comment{
-    display:flex;
-    gap:15px;
-    padding:25px 0;
-    border-bottom:1px solid #ddd;
-}
-.comment img{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-}
-.comment-author{font-weight:600;color:#000}
-.comment-text{color:#333}
+        /* Image Links */
+        .background-slide:nth-child(1) { background-image: url('../assets/images/s1.jpeg'); }
+        .background-slide:nth-child(2) { background-image: url('../assets/images/s2.jpeg'); }
+        .background-slide:nth-child(3) { background-image: url('../assets/images/s3.jpeg'); }
+        .background-slide:nth-child(4) { background-image: url('../assets/images/s4.jpeg'); }
+        .background-slide:nth-child(5) { background-image: url('../assets/images/s5.jpeg'); }
 
-/* ================= CTA ================= */
-.cta-section{
-    background:linear-gradient(135deg,#667eea,#764ba2);
-    text-align:center;
-}
-.btn{
-    display:inline-block;
-    margin-top:30px;
-    padding:15px 40px;
-    background:#fff;
-    color:#667eea;
-    border-radius:50px;
-    font-weight:600;
-    text-decoration:none;
-    transition:.3s;
-}
-.btn:hover{
-    transform:translateY(-5px) scale(1.05);
-}
+        .container { max-width: 1100px; margin: auto; }
 
-/* ================= MOBILE ================= */
-@media(max-width:768px){
-    .hero-title{font-size:2.6rem}
-    .hero-tagline{font-size:1.5rem}
-}
-</style>
+        /* ================= CARDS & UI ================= */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            padding: 60px 40px;
+            border-radius: 28px;
+        }
+
+        .comment {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 35px;
+            margin-bottom: 25px;
+            background: var(--glass);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .comment img { width: 55px; height: 55px; border-radius: 50%; }
+
+        .btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 22px 55px;
+            background: #fff;
+            color: #000;
+            border-radius: 100px;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: 0.4s;
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- ================= HERO ================= -->
-<section class="hero-section">
     <div class="background-slideshow">
         <div class="background-slide active"></div>
         <div class="background-slide"></div>
@@ -165,117 +141,92 @@ section{padding:90px 20px}
         <div class="background-slide"></div>
     </div>
 
-    <div class="hero-content">
+    <div class="sticky-container" id="sticky-hero">
         <h1 class="hero-title">Capturra</h1>
         <h2 class="hero-tagline">Where Creators Shine</h2>
     </div>
-</section>
 
-<!-- ================= FEATURES ================= -->
-<section style="background:#fff">
-<div class="container">
-<h2 class="section-title">Platform Features</h2>
+    <div class="hero-trigger"></div>
 
-<div class="features-grid">
-    <div class="feature-card"><div class="feature-icon">📸</div><h3>Portfolio Showcase</h3><p>Show your best work beautifully.</p></div>
-    <div class="feature-card"><div class="feature-icon">🌍</div><h3>Global Reach</h3><p>Connect with clients worldwide.</p></div>
-    <div class="feature-card"><div class="feature-icon">💬</div><h3>Direct Chat</h3><p>Instant communication.</p></div>
-</div>
-</div>
-</section>
-
-<!-- ================= COMMENTS ================= -->
-<section style="background:#fafafa">
-<div class="container">
-<h2 class="section-title">Trending Comments</h2>
-
-<div class="comments-section">
-    <div class="comment">
-        <img src="https://via.placeholder.com/40">
-        <div>
-            <div class="comment-author">@PhotoMaster</div>
-            <p class="comment-text">My business grew 300% using Capturra 📈</p>
+    <section id="features">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:60px; font-family:'Syne'; font-size: 3rem;">Platform Features</h2>
+            <div class="features-grid">
+                <div class="feature-card"><span>📸</span><h3>Portfolio Showcase</h3><p>Show your best work beautifully.</p></div>
+                <div class="feature-card"><span>🌍</span><h3>Global Reach</h3><p>Connect with clients worldwide.</p></div>
+                <div class="feature-card"><span>💬</span><h3>Direct Chat</h3><p>Instant communication.</p></div>
+            </div>
         </div>
-    </div>
-    <div class="comment">
-        <img src="https://via.placeholder.com/40">
-        <div>
-            <div class="comment-author">@CreativePixel</div>
-            <p class="comment-text">Best photography platform ever 🔥</p>
+    </section>
+
+    <section id="comments">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:60px; font-family:'Syne'; font-size: 3rem;">Trending Comments</h2>
+            <div class="comment">
+                <img src="https://via.placeholder.com/60">
+                <div><strong>@PhotoMaster</strong><p>My business grew 300% using Capturra 📈</p></div>
+            </div>
+            <div class="comment">
+                <img src="https://via.placeholder.com/60">
+                <div><strong>@CreativePixel</strong><p>Best photography platform ever 🔥</p></div>
+            </div>
         </div>
-    </div>
-</div>
-</div>
-</section>
+    </section>
 
-<!-- ================= CTA ================= -->
-<section class="cta-section">
-<h2>Turn Moments Into Opportunities</h2>
-<a href="2.html" class="btn">Explore Platform</a>
-</section>
+    <section style="text-align:center;">
+        <h2 style="font-family:'Syne'; font-size: 3rem;">Turn Moments Into Opportunities</h2>
+        <a href="2.html" class="btn">Explore Platform</a>
+    </section>
 
-<!-- ================= GSAP ================= -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
-<script>
-gsap.registerPlugin(ScrollTrigger);
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
 
-/* Hero scroll */
-gsap.to(".hero-content",{
-    y:-150,
-    scale:.9,
-    opacity:0,
-    scrollTrigger:{
-        trigger:".hero-section",
-        start:"top top",
-        end:"bottom top",
-        scrub:true
-    }
-});
+        // THE MAGIC: Move the title from center to top-fixed position
+        gsap.to("#sticky-hero", {
+            scrollTrigger: {
+                trigger: ".hero-trigger",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            },
+            height: "80px", // Shinks the container to a top bar
+            background: "rgba(5, 5, 5, 0.8)", // Adds a background when it becomes a bar
+            backdropFilter: "blur(10px)"
+        });
 
-/* Background parallax */
-gsap.to(".background-slideshow",{
-    scale:1.15,
-    scrollTrigger:{
-        trigger:".hero-section",
-        scrub:true
-    }
-});
+        gsap.to(".hero-title", {
+            scrollTrigger: {
+                trigger: ".hero-trigger",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            },
+            scale: 0.3, // Shrinks the text
+            y: 0 
+        });
 
-/* Feature cards */
-gsap.from(".feature-card",{
-    opacity:0,
-    y:60,
-    stagger:.2,
-    duration:1.6,
-    scrollTrigger:{
-        trigger:".features-grid",
-        start:"top 80%"
-    }
-});
+        gsap.to(".hero-tagline", {
+            scrollTrigger: {
+                trigger: ".hero-trigger",
+                start: "top top",
+                end: "center top",
+                scrub: true
+            },
+            opacity: 0, // Fades out tagline so only the name stays
+            display: "none"
+        });
 
-/* Comments */
-gsap.from(".comment",{
-    opacity:0,
-    x:-40,
-    stagger:.15,
-    duration:1.2,
-    scrollTrigger:{
-        trigger:".comments-section",
-        start:"top 80%"
-    }
-});
-
-/* Background slideshow logic */
-let slides=document.querySelectorAll('.background-slide');
-let i=0;
-setInterval(()=>{
-    slides[i].classList.remove('active');
-    i=(i+1)%slides.length;
-    slides[i].classList.add('active');
-},4000);
-</script>
-
+        // Slideshow Logic
+        let slides = document.querySelectorAll('.background-slide');
+        let index = 0;
+        setInterval(() => {
+            slides[index].classList.remove('active');
+            index = (index + 1) % slides.length;
+            slides[index].classList.add('active');
+        }, 5000);
+    </script>
 </body>
 </html>

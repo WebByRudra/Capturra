@@ -2,8 +2,11 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/capturra/includes/auth.php');
 requireRole("client");
 
+include("../config/db.php");
+
 $username = $_SESSION['username'];
 $name     = $_SESSION['name'];
+$user_id  = $_SESSION['user_id'];
 ?>
 
 
@@ -314,6 +317,15 @@ document.addEventListener('click', function(event) {
                     <!-- Trending Photos -->
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">🔥 Trending Photos</h2>
+                        <?php
+$photos = mysqli_query($conn, "
+SELECT photos.*, users.username
+FROM photos
+JOIN users ON photos.user_id = users.id
+ORDER BY photos.id DESC
+LIMIT 9
+");
+?>
                         <div class="photo-grid">
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
                                 <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Mountain landscape" class="w-full" style="height:auto; object-fit:contain;">

@@ -2,47 +2,70 @@
 session_start();
 include("../config/database.php");
 
-if(isset($_FILES["photo"]) && $_FILES["photo"]["error"] == 0){
+if(!isset($_SESSION['user_id'])){
+    header("Location: ../public/login.php");
+    exit();
+}
 
-    // Check if user logged in
-    if(!isset($_SESSION['user_id'])){
-        header("Location: ../public/login.php"); 
-        exit();
-    }
+if(isset($_FILES["photo"]) && $_FILES["photo"]["error"] === 0){
 
     $user_id = $_SESSION['user_id'];
 
     $targetDir = "../uploads/";
+
+    // File info
     $fileName = basename($_FILES["photo"]["name"]);
-    $uniqueName = time() . "_" . $fileName;
-    $targetFilePath = $targetDir . $uniqueName;
+    $fileTmp  = $_FILES["photo"]["tmp_name"];
+    $fileSize = $_FILES["photo"]["size"];
 
-    // Move uploaded file
-    if(move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFilePath)){
+    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-        // Save relative path in database
-        $dbPath = "uploads/" . $uniqueName;
+    // Allowed extensions
+    $allowed = ["jpg","jpeg","png","webp"];
 
-        $sql = "INSERT INTO photos (user_id, photo_path) 
-                VALUES ('$user_id', '$dbPath')";
-        mysqli_query($conn, $sql);
-
-        // Set success message
-        $_SESSION['success'] = "Photo uploaded successfully!";
-
-        // Redirect to photographer home
-        header("Location: ../public/photographer_home.php");
-        exit();
-    } 
-    else{
-        $_SESSION['error'] = "Upload failed. Try again.";
+    if(!in_array($fileExt, $allowed)){
+        $_SESSION['error'] = "Only JPG, PNG, WEBP allowed.";
         header("Location: ../public/photographer_home.php");
         exit();
     }
 
+    if($fileSize > 5 * 1024 * 1024){
+        $_SESSION['error'] = "File too large. Max 5MB.";
+        header("Location: ../public/photographer_home.php");
+        exit();
+    }
+
+    // Unique filename
+    $uniqueName = uniqid() . "_" . time() . "." . $fileExt;
+
+    $targetFilePath = $targetDir . $uniqueName;
+
+    if(move_uploaded_file($fileTmp, $targetFilePath)){
+
+        // Save path for database
+        $dbPath = "uploads/" . $uniqueName;
+
+        $stmt = $conn->prepare("INSERT INTO photos (user_id, photo_path) VALUES (?, ?)");
+        $stmt->bind_param("is", $user_id, $dbPath);
+        $stmt->execute();
+
+        $_SESSION['success'] = "Photo uploaded successfully!";
+        header("Location: ../public/photographer_home.php");
+        exit();
+
+    } else {
+
+        $_SESSION['error'] = "Upload failed.";
+        header("Location: ../public/photographer_home.php");
+        exit();
+
+    }
+
 } else {
+
     $_SESSION['error'] = "No file selected.";
     header("Location: ../public/photographer_home.php");
     exit();
+
 }
 ?>

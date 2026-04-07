@@ -357,18 +357,18 @@ document.addEventListener('click', function(event) {
              <div class="bg-white p-6 rounded-xl shadow-md">
     <h3 class="font-semibold mb-4">Quick Upload</h3>
 
-    <form action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
+    <form action="../actions/upload_photo.php" method="POST" enctype="multipart/form-data">
 
-        <input type="file" name="photo" required
-               class="block w-full text-sm mb-4">
+    <input type="file" name="photo" required
+           class="block w-full text-sm mb-4">
 
-        <button type="submit"
-            class="w-full bg-purple-600 text-white py-2 rounded-lg 
-                   hover:bg-purple-700 transition duration-300">
-            Upload Photo
-        </button>
+    <button type="submit"
+        class="w-full bg-purple-600 text-white py-2 rounded-lg 
+               hover:bg-purple-700 transition duration-300">
+        Upload Photo
+    </button>
 
-    </form>
+</form>
 </div>
 
 
