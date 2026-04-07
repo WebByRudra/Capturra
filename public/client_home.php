@@ -303,7 +303,7 @@ document.addEventListener('click', function(event) {
                         <button onclick="viewPortfolio()" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors">
                             View Portfolio
                         </button>
-                        <button onclick="hirePhotographer()" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                        <button onclick="hirePhotographer()" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors"><a href="booking_calendar.php">
                             Hire Photographer
                         </button>
                     </div>

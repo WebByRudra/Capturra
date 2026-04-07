@@ -1,4 +1,8 @@
 <?php
+
+$hidden_comments = $hidden_comments ?? [];
+$total_comments = $total_comments ?? 0;
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/auth.php";
 requireRole("photographer");
 
@@ -194,7 +198,7 @@ if (!$result) {
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">My Portfolio</a>
+                    <a href="portfolio.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">My Portfolio</a>
                     
                     
 
@@ -445,6 +449,12 @@ document.addEventListener('click', function(event) {
                 </form>
             </div>
 
+<?php
+$initial_comments = $initial_comments ?? [];
+$hidden_comments = $hidden_comments ?? [];
+$total_comments = $total_comments ?? 0;
+?>
+
             <!-- Comment button (right) -->
             <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
                 <button onclick="toggleComment(this)" class="bg-white/80 hover:bg-white text-gray-800 px-3 py-2 rounded-full shadow transition flex items-center space-x-2">
@@ -456,7 +466,7 @@ document.addEventListener('click', function(event) {
 
         <!-- Comments -->
         <div class="px-4 mt-2 text-sm text-gray-800">
-            <?php if(count($hidden_comments) > 0): ?>
+            <?php if(!empty($hidden_comments)): ?>
                 <div class="view-all-comments text-gray-500 cursor-pointer text-sm mb-1" onclick="showAllComments(this)">
                     View all <?php echo $total_comments; ?> comments
                 </div>
@@ -473,7 +483,7 @@ document.addEventListener('click', function(event) {
                 </div>
             <?php endif; ?>
 
-            <?php foreach($initial_comments as $comment): ?>
+            <?php foreach(($initial_comments ?? []) as $comment): ?>
                 <div class="mb-1">
                     <span class="font-semibold"><?php echo htmlspecialchars($comment['username']); ?>:</span>
                     <span><?php echo htmlspecialchars($comment['comment']); ?></span>

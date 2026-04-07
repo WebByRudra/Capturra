@@ -30,6 +30,27 @@ select.input-field {
     padding-right: 2.5rem; /* Arrow ke liye jagah */
 }
 
+/* Page transition */
+
+body{
+opacity:0;
+transform:translateX(40px);
+animation:pageEnter 0.6s ease forwards;
+}
+
+@keyframes pageEnter{
+to{
+opacity:1;
+transform:translateX(0);
+}
+}
+
+.page-exit{
+opacity:0;
+transform:translateX(-40px);
+transition:all 0.4s ease;
+}
+
     </style>
 </head>
 <body>
@@ -85,5 +106,32 @@ select.input-field {
             </div>
         </div>
     </div>
+
+    <script>
+
+document.querySelectorAll("a").forEach(link => {
+
+link.addEventListener("click", function(e){
+
+const url = this.href;
+
+if(url){
+
+e.preventDefault();
+
+document.body.classList.add("page-exit");
+
+setTimeout(()=>{
+window.location.href = url;
+},400);
+
+}
+
+});
+
+});
+
+</script>
+    
 </body>
 </html>

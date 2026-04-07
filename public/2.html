@@ -183,9 +183,10 @@
             </div>
         </div>
         
-        <button class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-purple-600 transition-colors"><a href="signup.html">
-           Join Now</a>
-        </button>
+        <a href="signup.html" 
+class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-purple-600 transition-colors inline-block">
+Join Now
+</a>
     </div>
 </section>
 
@@ -684,7 +685,11 @@
         }
 
         // Notification bell functionality
-        document.querySelector('button span:contains("🔔")')?.parentElement.addEventListener('click', function() {
+        document.querySelectorAll("button span").forEach(span => {
+    if (span.textContent.includes("🔔")) {
+        console.log("Bell found");
+    }
+})?.parentElement.addEventListener('click', function() {
             alert('Notifications:\n• Alex Chen liked your photo\n• New follower: Sarah Johnson\n• Client inquiry from Mike Rodriguez');
         });
 
