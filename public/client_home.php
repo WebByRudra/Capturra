@@ -2,11 +2,8 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/capturra/includes/auth.php');
 requireRole("client");
 
-include("../config/db.php");
-
 $username = $_SESSION['username'];
 $name     = $_SESSION['name'];
-$user_id  = $_SESSION['user_id'];
 ?>
 
 
@@ -295,37 +292,29 @@ document.addEventListener('click', function(event) {
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Hero / Welcome Section -->
-                <div class="gradient-bg rounded-xl p-8 text-white">
-                    <h1 class="text-3xl font-bold mb-2">
-  Welcome back, <?php echo htmlspecialchars($name); ?> 👋
-</h1>
+               <div class="gradient-bg rounded-xl p-8 text-white">
+    <h1 class="text-3xl font-bold mb-2">
+        Welcome back, <?php echo htmlspecialchars($name); ?> 👋
+    </h1>
 
-                    <p class="text-purple-100 mb-6">Explore photographers and book your next event effortlessly.</p>
-                    <div class="flex flex-wrap gap-4">
-                        
-                        <button onclick="viewPortfolio()" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors">
-                            View Portfolio
-                        </button>
-                        <button onclick="hirePhotographer()" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors"><a href="booking_calendar.php">
-                            Hire Photographer
-                        </button>
-                    </div>
-                </div>
+    <p class="text-purple-100 mb-6">Explore photographers and book your next event effortlessly.</p>
+    
+    <div class="flex flex-wrap gap-4">
+        <a href="portfolio.php" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors text-center">
+            View Portfolio
+        </a>
+
+        <a href="booking_calendar.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors text-center">
+            Hire Photographer
+        </a>
+    </div>
+</div>
 
                 <!-- Main Feed -->
                 <div class="space-y-8">
                     <!-- Trending Photos -->
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">🔥 Trending Photos</h2>
-                        <?php
-$photos = mysqli_query($conn, "
-SELECT photos.*, users.username
-FROM photos
-JOIN users ON photos.user_id = users.id
-ORDER BY photos.id DESC
-LIMIT 9
-");
-?>
                         <div class="photo-grid">
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
                                 <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Mountain landscape" class="w-full" style="height:auto; object-fit:contain;">

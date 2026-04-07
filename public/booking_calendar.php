@@ -24,14 +24,10 @@ $monthName = date('F', strtotime("$year-$month-01"));
             border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 700; font-size: 0.7rem; 
         }
         .selected-date { background-color: #8b5cf6 !important; color: white !important; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
-        
-        /* Accordion Smooth Animation */
         #eventOptions { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         #eventOptions.open { max-height: 400px; padding-bottom: 10px; }
         .rotate-icon { transition: transform 0.3s; }
         .rotate-icon.active { transform: rotate(180deg); }
-
-        /* Custom Radio Buttons */
         .event-radio { display: none; }
         .event-row { 
             display: flex; align-items: center; padding: 12px; border-radius: 12px; 
@@ -57,7 +53,7 @@ $monthName = date('F', strtotime("$year-$month-01"));
 
     <div class="max-w-md mx-auto bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 p-6">
         
-        <form action="api/save_booking.php" method="POST">
+        <form id="bookingForm">
             <input type="hidden" name="selected_date" id="date_input">
 
             <div class="mb-6">
@@ -86,9 +82,6 @@ $monthName = date('F', strtotime("$year-$month-01"));
             <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-3xl mb-6 border border-slate-100 dark:border-slate-700/30">
                 <div class="flex justify-between items-center mb-4 px-1">
                     <span class="font-black dark:text-white text-slate-800 text-xs uppercase tracking-tighter"><?php echo $monthName . " " . $year; ?></span>
-                    <div class="flex gap-1">
-                        <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
-                    </div>
                 </div>
 
                 <div class="calendar-grid text-[8px] font-black text-slate-400 mb-2 text-center tracking-widest">
@@ -100,29 +93,26 @@ $monthName = date('F', strtotime("$year-$month-01"));
                     for ($i = 0; $i < $firstDayOfMonth; $i++) echo "<div class='date-btn empty'></div>";
                     for ($day = 1; $day <= $daysInMonth; $day++) {
                         $fullDate = "$year-$month-" . str_pad($day, 2, '0', STR_PAD_LEFT);
-                        
-                        $isBooked = false; // Add your DB query here
-                        $class = $isBooked ? 'opacity-20 pointer-events-none' : 'bg-white dark:bg-slate-800 dark:text-slate-300 shadow-sm border border-slate-100 dark:border-slate-700/50';
-                        
-                        echo "<div onclick='selectDate(this, \"$fullDate\")' class='date-btn $class'>$day</div>";
+                        echo "<div onclick='selectDate(this, \"$fullDate\")' class='date-btn bg-white dark:bg-slate-800 dark:text-slate-300 shadow-sm border border-slate-100 dark:border-slate-700/50'>$day</div>";
                     }
                     ?>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <input type="text" name="name" placeholder="Full Name" required class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500 dark:text-white text-xs font-bold border-none transition-all">
-                <input type="text" name="phone" placeholder="Phone" required class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500 dark:text-white text-xs font-bold border-none transition-all">
+                <input type="text" id="cust_name" name="name" placeholder="Full Name" required class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500 dark:text-white text-xs font-bold border-none transition-all">
+                <input type="text" id="cust_phone" name="phone" placeholder="Phone" required class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500 dark:text-white text-xs font-bold border-none transition-all">
             </div>
 
-            <button type="submit" class="w-full py-5 bg-purple-600 text-white rounded-[1.8rem] font-black text-xs tracking-[0.2em] hover:bg-purple-700 transition-all shadow-xl shadow-purple-500/20 active:scale-95 uppercase">
-                Confirm Booking
-            </button>
+            <div class="mt-8">
+                <button type="button" onclick="goToPayment()" class="w-full text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-purple-200">
+                    Confirm Booking & Proceed to Payment
+                </button>
+            </div>
         </form>
     </div>
 
     <script>
-        // Toggle Theme
         function toggleTheme() {
             const root = document.getElementById('themeRoot');
             const btn = document.getElementById('themeBtn');
@@ -135,7 +125,6 @@ $monthName = date('F', strtotime("$year-$month-01"));
             }
         }
 
-        // Accordion Toggle
         function toggleEvents() {
             const options = document.getElementById('eventOptions');
             const icon = document.querySelector('.rotate-icon');
@@ -143,17 +132,32 @@ $monthName = date('F', strtotime("$year-$month-01"));
             icon.classList.toggle('active');
         }
 
-        // Update selected event text
         function updateEventText(val) {
             document.getElementById('selectedEventText').innerText = val;
-            setTimeout(toggleEvents, 300); // Small delay before closing
+            setTimeout(toggleEvents, 300);
         }
 
-        // Date selection
         function selectDate(el, date) {
             document.querySelectorAll('.date-btn').forEach(d => d.classList.remove('selected-date'));
             el.classList.add('selected-date');
             document.getElementById('date_input').value = date;
+        }
+
+        // Redirect Logic
+        function goToPayment() {
+            const name = document.getElementById('cust_name').value;
+            const phone = document.getElementById('cust_phone').value;
+            const date = document.getElementById('date_input').value;
+            const event = document.getElementById('selectedEventText').innerText;
+
+            if (!name || !phone || !date || event === "Select Category") {
+                alert("Please fill all details and select a booking date!");
+                return;
+            }
+
+            // Redirecting to payment.php with data
+            const url = `payment.php?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&date=${encodeURIComponent(date)}&event=${encodeURIComponent(event)}`;
+            window.location.href = url;
         }
     </script>
 </body>
