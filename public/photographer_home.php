@@ -357,7 +357,7 @@ document.addEventListener('click', function(event) {
              <div class="bg-white p-6 rounded-xl shadow-md">
     <h3 class="font-semibold mb-4">Quick Upload</h3>
 
-    <form action="../actions/upload_photo.php" method="POST" enctype="multipart/form-data">
+    <form action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
 
     <input type="file" name="photo" required
            class="block w-full text-sm mb-4">
@@ -401,20 +401,29 @@ document.addEventListener('click', function(event) {
     </h1>
     <p class="text-purple-100 mb-6">Ready to showcase your amazing work to the world?</p>
 
-    <div class="flex flex-wrap gap-4">
-        <button class="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-900 transition-colors flex items-center gap-2">
-            📸 Upload Photo
-        </button>
+        <div class="flex flex-wrap gap-4">
+            <form action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
 
-        <a href="portfolio.php?id=<?php echo $user_id; ?>" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center">
-            Manage Portfolio
+    <input type="file" name="photo" id="fileInput" class="hidden"
+           onchange="this.form.submit()">
+
+    <button type="button"
+        onclick="document.getElementById('fileInput').click()"
+        class="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-900 transition-colors flex items-center gap-2">
+        📸 Upload Photo
+    </button>
+
+</form>
+        
+            <a href="portfolio.php?id=<?php echo $user_id; ?>" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center">
+                Manage Portfolio
+            </a>
+
+            <a href="photographer_analytics.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                View Analytics
         </a>
-
-        <a href="photographer_analytics.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
-            View Analytics
-    </a>
+        </div>
     </div>
-</div>
 <!-- Your Recent Uploads (single-column feed) -->
 <div class="max-w-3xl mx-auto w-full">
     <div class="grid grid-cols-1 gap-6 p-4">
