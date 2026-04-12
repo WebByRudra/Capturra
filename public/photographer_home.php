@@ -395,35 +395,26 @@ document.addEventListener('click', function(event) {
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Welcome / Hero Section -->
-                <div class="photographer-gradient rounded-xl p-8 text-white">
-                                        <h1 class="text-3xl font-bold mb-2">
-  Welcome back, <?php echo htmlspecialchars($name); ?> 👋
-</h1>
-                    <p class="text-pink-100 mb-6">Ready to showcase your amazing work to the world?</p>
-                    <div class="flex flex-wrap gap-4">
-                        <form id="centerUploadForm" action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
+                <div class="gradient-bg rounded-xl p-8 text-white">
+    <h1 class="text-3xl font-bold mb-2">
+        Welcome back, <?php echo htmlspecialchars($username); ?> 👋
+    </h1>
+    <p class="text-purple-100 mb-6">Ready to showcase your amazing work to the world?</p>
 
-    <input type="file" name="photo" id="centerPhotoInput" 
-           style="display: none;" 
-           onchange="document.getElementById('centerUploadForm').submit();">
+    <div class="flex flex-wrap gap-4">
+        <button class="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-900 transition-colors flex items-center gap-2">
+            📸 Upload Photo
+        </button>
 
-    <button type="button"
-        onclick="document.getElementById('centerPhotoInput').click();"
-        class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center space-x-2">
-        📷 Upload Photo
-    </button>
+        <a href="portfolio.php?id=<?php echo $user_id; ?>" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center">
+            Manage Portfolio
+        </a>
 
-</form>
-
-                        </button>
-                        <button onclick="managePortfolio()" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors">
-                            Manage Portfolio
-                        </button>
-                        <button onclick="viewAnalytics()" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
-                            View Analytics
-                        </button>
-                    </div>
-                </div>
+        <a href="photographer_analytics.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+            View Analytics
+    </a>
+    </div>
+</div>
 <!-- Your Recent Uploads (single-column feed) -->
 <div class="max-w-3xl mx-auto w-full">
     <div class="grid grid-cols-1 gap-6 p-4">

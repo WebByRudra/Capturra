@@ -43,7 +43,7 @@ requireRole("photographer");
                 <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Account Settings</h1>
                 <p class="text-slate-500 font-medium mt-1">Manage your public presence and booking details.</p>
             </div>
-            <a href="/Capturra/public/photographer_analytics.php" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm">
+            <a href="/Capturra/public/photographer_home.php" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm">
                 ← Dashboard
             </a>
         </div>

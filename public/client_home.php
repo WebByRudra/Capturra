@@ -120,7 +120,7 @@ $name     = $_SESSION['name'];
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Creators</a>
                     <div class="relative inline-block">
     <div class="relative cursor-pointer group" onclick="toggleMessages(event)">
-        <span class="text-2xl group-hover:scale-110 transition-transform inline-block">  Messages</span>
+        <span class="text-2xl group-hover:scale-110 transition-transform iagenline-block">  💬</span>
         <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white dark:border-slate-900 notification-dot"></div>
     </div>
 
