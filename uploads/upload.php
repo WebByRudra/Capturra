@@ -45,8 +45,10 @@ if(isset($_FILES["photo"]) && $_FILES["photo"]["error"] === 0){
         // Save path for database
         $dbPath = "uploads/" . $uniqueName;
 
-        $stmt = $conn->prepare("INSERT INTO photos (user_id, photo_path) VALUES (?, ?)");
-        $stmt->bind_param("is", $user_id, $dbPath);
+$stmt = $conn->prepare("INSERT INTO photos (user_id, image) VALUES (?, ?)");
+if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}        $stmt->bind_param("is", $user_id, $dbPath);
         $stmt->execute();
 
         $_SESSION['success'] = "Photo uploaded successfully!";

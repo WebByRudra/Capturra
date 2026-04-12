@@ -394,6 +394,7 @@ document.addEventListener('click', function(event) {
 
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-8">
+                
                 <!-- Welcome / Hero Section -->
                 <div class="photographer-gradient rounded-xl p-8 text-white">
                                         <h1 class="text-3xl font-bold mb-2">
@@ -424,6 +425,54 @@ document.addEventListener('click', function(event) {
                         </button>
                     </div>
                 </div>
+
+                <?php if(mysqli_num_rows($result) > 0) { ?>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+<?php while($row = mysqli_fetch_assoc($result)) { ?>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
+
+        <!-- Image -->
+        <img src="/Capturra/<?php echo $row['image']; ?>" 
+             class="w-full rounded-t-xl"
+             style="max-height:300px; object-fit:contain;">
+
+        <!-- Like Button -->
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
+            <form action="../actions/like.php" method="POST">
+                <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
+                <button type="submit" class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
+                    ❤️ <span class="text-sm"><?php echo $row['total_likes']; ?></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Comment Button -->
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
+            <button class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
+                💬 <span class="text-sm">0</span>
+            </button>
+        </div>
+
+        <!-- Upload Time -->
+        <div class="px-4 py-2 text-xs text-gray-500">
+            <?php echo date('d M Y', strtotime($row['upload_date'])); ?>
+        </div>
+
+    </div>
+
+<?php } ?>
+
+</div>
+
+<?php } else { ?>
+
+<p class="text-gray-500 px-4">No photos uploaded yet.</p>
+
+<?php } ?>
+
 <!-- Your Recent Uploads (single-column feed) -->
 <div class="max-w-3xl mx-auto w-full">
     <div class="grid grid-cols-1 gap-6 p-4">
@@ -435,9 +484,9 @@ document.addEventListener('click', function(event) {
 
         <!-- Photo with side action buttons (no crop) -->
         <div class="relative">
-               <img src="<?php echo $image_path; ?>" 
-                   class="w-full rounded-t-xl post-img" style="height:auto; object-fit:contain;">
-
+<img src="/Capturra/<?php echo $row['image']; ?>" 
+     class="w-full rounded-t-xl"
+     style="max-height:500px; object-fit:contain;">
             <!-- Like button (left) -->
             <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
                 <form action="../actions/like.php" method="POST">
@@ -571,44 +620,12 @@ function showAllComments(element) {
                     </div>
                 </section>
 
-                <!-- Follower Activity -->
-                <section>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">👥 Follower Activity</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div class="space-y-4">
-                            <div class="flex items-center space-x-4">
-                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
-                                <div class="flex-1">
-                                    <p class="text-sm"><span class="font-semibold">Sarah Johnson</span> liked your photo "Golden Hour Portrait"</p>
-                                    <p class="text-xs text-gray-500">2 minutes ago</p>
-                                </div>
-                                <span class="text-red-500">❤️</span>
-                            </div>
-                            
-                            <div class="flex items-center space-x-4">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
-                                <div class="flex-1">
-                                    <p class="text-sm"><span class="font-semibold">Emma Wilson</span> commented on "Beautiful Wedding Moment"</p>
-                                    <p class="text-xs text-gray-500">15 minutes ago</p>
-                                </div>
-                                <span class="text-blue-500">💬</span>
-                            </div>
-                            
-                            <div class="flex items-center space-x-4">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
-                                <div class="flex-1">
-                                    <p class="text-sm"><span class="font-semibold">David Park</span> started following you</p>
-                                    <p class="text-xs text-gray-500">1 hour ago</p>
-                                </div>
-                                <span class="text-green-500">👤</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                
             </div>
 
             <!-- Right Sidebar -->
             <div class="lg:col-span-1 space-y-6">
+
                 <!-- Top Creators Leaderboard -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">🏆 Top Creators</h3>
@@ -704,10 +721,51 @@ function showAllComments(element) {
                         </div>
                     </div>
                 </div>
+                
+
+                    <!-- Follower Activity-->
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">👥 Follower Activity</h2>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-4">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
+                                    <div class="flex-1">
+                                        <p class="text-sm"><span class="font-semibold">Sarah Johnson</span> liked your photo "Golden Hour Portrait"</p>
+                                        <p class="text-xs text-gray-500">2 minutes ago</p>
+                                    </div>
+                                    <span class="text-red-500">❤️</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
+                                    <div class="flex-1">
+                                        <p class="text-sm"><span class="font-semibold">Emma Wilson</span> commented on "Beautiful Wedding Moment"</p>
+                                        <p class="text-xs text-gray-500">15 minutes ago</p>
+                                    </div>
+                                    <span class="text-blue-500">💬</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
+                                    <div class="flex-1">
+                                        <p class="text-sm"><span class="font-semibold">David Park</span> started following you</p>
+                                        <p class="text-xs text-gray-500">1 hour ago</p>
+                                    </div>
+                                    <span class="text-green-500">👤</span>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+            </div>
             </div>
         </div>
     </div>
 
+  
+
+
+  
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -806,6 +864,10 @@ function showAllComments(element) {
         function managePortfolio() {
             alert('Portfolio manager opening - organize your best work!');
         }
+
+        function managePortfolio() {
+    window.location.href = "http://localhost:8888/Capturra/public/portfolio.php?id=<?php echo $_SESSION['user_id']; ?>";
+}
 
         function viewAnalytics() {
             window.location.href = 'photographer_analytics.php';
