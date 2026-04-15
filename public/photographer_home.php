@@ -198,7 +198,6 @@ if (!$result) {
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
-                    <a href="portfolio.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">My Portfolio</a>
                     
                     
 
@@ -435,9 +434,10 @@ document.addEventListener('click', function(event) {
     <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
         <!-- Image -->
-        <img src="/Capturra/<?php echo $row['image']; ?>" 
-             class="w-full rounded-t-xl"
-             style="max-height:300px; object-fit:contain;">
+         <img src="/Capturra/<?php echo $row['image']; ?>" 
+     class="w-full rounded-t-xl cursor-pointer"
+     style="max-height:300px; object-fit:contain;"
+     onclick="openModal(this.src)">
 
         <!-- Like Button -->
         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
@@ -764,7 +764,16 @@ function showAllComments(element) {
 
   
 
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
+    
+    <!-- Close Button -->
+    <span onclick="closeModal()" class="absolute top-5 right-8 text-white text-3xl cursor-pointer">&times;</span>
+    
+    <!-- Image -->
+    <img id="modalImage" class="max-h-[90%] max-w-[90%] rounded-lg shadow-lg">
 
+</div>
   
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 mt-16">
@@ -945,8 +954,9 @@ function showAllComments(element) {
             });
         });
     </script>
+    <script>
 (function(){
-    const btn = document.getElementById('darkToggle');
+    const btn = document.getElementById('darkToggle')
     if(!btn) return;
     const KEY = 'capturra-dark';
     function applyDark(d){
@@ -963,46 +973,48 @@ function showAllComments(element) {
         const isDark = !document.documentElement.classList.contains('dark');
         applyDark(isDark);
         localStorage.setItem(KEY, isDark ? '1' : '0');
-    });
+    });}
+)
 </script>
 
 <script>
-        (function(){
-                const btn = document.getElementById('darkToggle');
-                if(!btn) return;
-                const KEY = 'capturra-dark';
-                function applyDark(d){
-                        document.documentElement.classList.toggle('dark', d);
-                        document.body.classList.toggle('dark', d);
-                        btn.setAttribute('aria-pressed', d);
-                        btn.textContent = d ? '☀️' : '🌙';
-                        if(d) btn.classList.add('active'); else btn.classList.remove('active');
-                }
-                const saved = localStorage.getItem(KEY);
-                const prefers = saved !== null ? saved === '1' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-                applyDark(prefers);
-                btn.addEventListener('click', function(){
-                        const isDark = !document.documentElement.classList.contains('dark');
-                        applyDark(isDark);
-                        localStorage.setItem(KEY, isDark ? '1' : '0');
-                });
-        })();
+(function(){ 
+    const btn = document.getElementById('darkToggle');
+    if(!btn) return;
 
-        function logout() {
-            fetch("http://localhost:8888/Capturra/api/auth/logout.php")
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status) {
-                        window.location.href = "/Capturra/public/login.html";
-                    } else {
-                        alert("Logout failed");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Server error");
-                });
-        }
+    const KEY = 'capturra-dark';
+
+    function applyDark(d){
+        document.documentElement.classList.toggle('dark', d);
+        document.body.classList.toggle('dark', d);
+        btn.setAttribute('aria-pressed', d);
+        btn.textContent = d ? '☀️' : '🌙';
+    }
+
+    const saved = localStorage.getItem(KEY);
+    const prefers = saved !== null ? saved === '1' : false;
+
+    applyDark(prefers);
+
+    btn.addEventListener('click', function(){
+        const isDark = !document.documentElement.classList.contains('dark');
+        applyDark(isDark);
+        localStorage.setItem(KEY, isDark ? '1' : '0');
+    });
+
+})();
 </script>
+<script>
+function openModal(src) {
+    document.getElementById("imageModal").classList.remove("hidden");
+    document.getElementById("imageModal").classList.add("flex");
+    document.getElementById("modalImage").src = src;
+}
 
+function closeModal() {
+    document.getElementById("imageModal").classList.add("hidden");
+    document.getElementById("imageModal").classList.remove("flex");
+}
+</script>
+</body>
 </html>
