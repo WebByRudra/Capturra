@@ -198,7 +198,6 @@ if (!$result) {
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
-                    <a href="portfolio.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">My Portfolio</a>
                     
                     
 
@@ -357,7 +356,7 @@ document.addEventListener('click', function(event) {
              <div class="bg-white p-6 rounded-xl shadow-md">
     <h3 class="font-semibold mb-4">Quick Upload</h3>
 
-    <form action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
+    <form action="../actions/upload_photo.php" method="POST" enctype="multipart/form-data">
 
     <input type="file" name="photo" required
            class="block w-full text-sm mb-4">
@@ -394,36 +393,86 @@ document.addEventListener('click', function(event) {
 
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-8">
+                
                 <!-- Welcome / Hero Section -->
-                <div class="gradient-bg rounded-xl p-8 text-white">
-    <h1 class="text-3xl font-bold mb-2">
-        Welcome back, <?php echo htmlspecialchars($username); ?> 👋
-    </h1>
-    <p class="text-purple-100 mb-6">Ready to showcase your amazing work to the world?</p>
+                <div class="photographer-gradient rounded-xl p-8 text-white">
+                                        <h1 class="text-3xl font-bold mb-2">
+  Welcome back, <?php echo htmlspecialchars($name); ?> 👋
+</h1>
+                    <p class="text-pink-100 mb-6">Ready to showcase your amazing work to the world?</p>
+                    <div class="flex flex-wrap gap-4">
+                        <form id="centerUploadForm" action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
 
-        <div class="flex flex-wrap gap-4">
-            <form action="../uploads/upload.php" method="POST" enctype="multipart/form-data">
-
-    <input type="file" name="photo" id="fileInput" class="hidden"
-           onchange="this.form.submit()">
+    <input type="file" name="photo" id="centerPhotoInput" 
+           style="display: none;" 
+           onchange="document.getElementById('centerUploadForm').submit();">
 
     <button type="button"
-        onclick="document.getElementById('fileInput').click()"
-        class="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-900 transition-colors flex items-center gap-2">
-        📸 Upload Photo
+        onclick="document.getElementById('centerPhotoInput').click();"
+        class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center space-x-2">
+        📷 Upload Photo
     </button>
 
 </form>
-        
-            <a href="portfolio.php?id=<?php echo $user_id; ?>" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center">
-                Manage Portfolio
-            </a>
 
-            <a href="photographer_analytics.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
-                View Analytics
-        </a>
+                        </button>
+                        <button onclick="managePortfolio()" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors">
+                            Manage Portfolio
+                        </button>
+                        <button onclick="viewAnalytics()" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+                            View Analytics
+                        </button>
+                    </div>
+                </div>
+
+                <?php if(mysqli_num_rows($result) > 0) { ?>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+<?php while($row = mysqli_fetch_assoc($result)) { ?>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
+
+        <!-- Image -->
+         <img src="/Capturra/<?php echo $row['image']; ?>" 
+     class="w-full rounded-t-xl cursor-pointer"
+     style="max-height:300px; object-fit:contain;"
+     onclick="openModal(this.src)">
+
+        <!-- Like Button -->
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
+            <form action="../actions/like.php" method="POST">
+                <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
+                <button type="submit" class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
+                    ❤️ <span class="text-sm"><?php echo $row['total_likes']; ?></span>
+                </button>
+            </form>
         </div>
+
+        <!-- Comment Button -->
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
+            <button class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
+                💬 <span class="text-sm">0</span>
+            </button>
+        </div>
+
+        <!-- Upload Time -->
+        <div class="px-4 py-2 text-xs text-gray-500">
+            <?php echo date('d M Y', strtotime($row['upload_date'])); ?>
+        </div>
+
     </div>
+
+<?php } ?>
+
+</div>
+
+<?php } else { ?>
+
+<p class="text-gray-500 px-4">No photos uploaded yet.</p>
+
+<?php } ?>
+
 <!-- Your Recent Uploads (single-column feed) -->
 <div class="max-w-3xl mx-auto w-full">
     <div class="grid grid-cols-1 gap-6 p-4">
@@ -435,9 +484,9 @@ document.addEventListener('click', function(event) {
 
         <!-- Photo with side action buttons (no crop) -->
         <div class="relative">
-               <img src="<?php echo $image_path; ?>" 
-                   class="w-full rounded-t-xl post-img" style="height:auto; object-fit:contain;">
-
+<img src="/Capturra/<?php echo $row['image']; ?>" 
+     class="w-full rounded-t-xl"
+     style="max-height:500px; object-fit:contain;">
             <!-- Like button (left) -->
             <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
                 <form action="../actions/like.php" method="POST">
@@ -571,44 +620,12 @@ function showAllComments(element) {
                     </div>
                 </section>
 
-                <!-- Follower Activity -->
-                <section>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">👥 Follower Activity</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div class="space-y-4">
-                            <div class="flex items-center space-x-4">
-                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
-                                <div class="flex-1">
-                                    <p class="text-sm"><span class="font-semibold">Sarah Johnson</span> liked your photo "Golden Hour Portrait"</p>
-                                    <p class="text-xs text-gray-500">2 minutes ago</p>
-                                </div>
-                                <span class="text-red-500">❤️</span>
-                            </div>
-                            
-                            <div class="flex items-center space-x-4">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
-                                <div class="flex-1">
-                                    <p class="text-sm"><span class="font-semibold">Emma Wilson</span> commented on "Beautiful Wedding Moment"</p>
-                                    <p class="text-xs text-gray-500">15 minutes ago</p>
-                                </div>
-                                <span class="text-blue-500">💬</span>
-                            </div>
-                            
-                            <div class="flex items-center space-x-4">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
-                                <div class="flex-1">
-                                    <p class="text-sm"><span class="font-semibold">David Park</span> started following you</p>
-                                    <p class="text-xs text-gray-500">1 hour ago</p>
-                                </div>
-                                <span class="text-green-500">👤</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                
             </div>
 
             <!-- Right Sidebar -->
             <div class="lg:col-span-1 space-y-6">
+
                 <!-- Top Creators Leaderboard -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">🏆 Top Creators</h3>
@@ -704,10 +721,60 @@ function showAllComments(element) {
                         </div>
                     </div>
                 </div>
+                
+
+                    <!-- Follower Activity-->
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">👥 Follower Activity</h2>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-4">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
+                                    <div class="flex-1">
+                                        <p class="text-sm"><span class="font-semibold">Sarah Johnson</span> liked your photo "Golden Hour Portrait"</p>
+                                        <p class="text-xs text-gray-500">2 minutes ago</p>
+                                    </div>
+                                    <span class="text-red-500">❤️</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
+                                    <div class="flex-1">
+                                        <p class="text-sm"><span class="font-semibold">Emma Wilson</span> commented on "Beautiful Wedding Moment"</p>
+                                        <p class="text-xs text-gray-500">15 minutes ago</p>
+                                    </div>
+                                    <span class="text-blue-500">💬</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-4">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
+                                    <div class="flex-1">
+                                        <p class="text-sm"><span class="font-semibold">David Park</span> started following you</p>
+                                        <p class="text-xs text-gray-500">1 hour ago</p>
+                                    </div>
+                                    <span class="text-green-500">👤</span>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+            </div>
             </div>
         </div>
     </div>
 
+  
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
+    
+    <!-- Close Button -->
+    <span onclick="closeModal()" class="absolute top-5 right-8 text-white text-3xl cursor-pointer">&times;</span>
+    
+    <!-- Image -->
+    <img id="modalImage" class="max-h-[90%] max-w-[90%] rounded-lg shadow-lg">
+
+</div>
+  
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -807,6 +874,10 @@ function showAllComments(element) {
             alert('Portfolio manager opening - organize your best work!');
         }
 
+        function managePortfolio() {
+    window.location.href = "http://localhost:8888/Capturra/public/portfolio.php?id=<?php echo $_SESSION['user_id']; ?>";
+}
+
         function viewAnalytics() {
             window.location.href = 'photographer_analytics.php';
         }
@@ -883,8 +954,9 @@ function showAllComments(element) {
             });
         });
     </script>
+    <script>
 (function(){
-    const btn = document.getElementById('darkToggle');
+    const btn = document.getElementById('darkToggle')
     if(!btn) return;
     const KEY = 'capturra-dark';
     function applyDark(d){
@@ -901,46 +973,48 @@ function showAllComments(element) {
         const isDark = !document.documentElement.classList.contains('dark');
         applyDark(isDark);
         localStorage.setItem(KEY, isDark ? '1' : '0');
-    });
+    });}
+)
 </script>
 
 <script>
-        (function(){
-                const btn = document.getElementById('darkToggle');
-                if(!btn) return;
-                const KEY = 'capturra-dark';
-                function applyDark(d){
-                        document.documentElement.classList.toggle('dark', d);
-                        document.body.classList.toggle('dark', d);
-                        btn.setAttribute('aria-pressed', d);
-                        btn.textContent = d ? '☀️' : '🌙';
-                        if(d) btn.classList.add('active'); else btn.classList.remove('active');
-                }
-                const saved = localStorage.getItem(KEY);
-                const prefers = saved !== null ? saved === '1' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-                applyDark(prefers);
-                btn.addEventListener('click', function(){
-                        const isDark = !document.documentElement.classList.contains('dark');
-                        applyDark(isDark);
-                        localStorage.setItem(KEY, isDark ? '1' : '0');
-                });
-        })();
+(function(){ 
+    const btn = document.getElementById('darkToggle');
+    if(!btn) return;
 
-        function logout() {
-            fetch("http://localhost:8888/Capturra/api/auth/logout.php")
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status) {
-                        window.location.href = "/Capturra/public/login.html";
-                    } else {
-                        alert("Logout failed");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Server error");
-                });
-        }
+    const KEY = 'capturra-dark';
+
+    function applyDark(d){
+        document.documentElement.classList.toggle('dark', d);
+        document.body.classList.toggle('dark', d);
+        btn.setAttribute('aria-pressed', d);
+        btn.textContent = d ? '☀️' : '🌙';
+    }
+
+    const saved = localStorage.getItem(KEY);
+    const prefers = saved !== null ? saved === '1' : false;
+
+    applyDark(prefers);
+
+    btn.addEventListener('click', function(){
+        const isDark = !document.documentElement.classList.contains('dark');
+        applyDark(isDark);
+        localStorage.setItem(KEY, isDark ? '1' : '0');
+    });
+
+})();
 </script>
+<script>
+function openModal(src) {
+    document.getElementById("imageModal").classList.remove("hidden");
+    document.getElementById("imageModal").classList.add("flex");
+    document.getElementById("modalImage").src = src;
+}
 
+function closeModal() {
+    document.getElementById("imageModal").classList.add("hidden");
+    document.getElementById("imageModal").classList.remove("flex");
+}
+</script>
+</body>
 </html>
