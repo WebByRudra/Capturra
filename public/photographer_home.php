@@ -434,7 +434,7 @@ document.addEventListener('click', function(event) {
     <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
         <!-- Image -->
-         <img src="/Capturra/<?php echo $row['image']; ?>" 
+       <img src="/Capturra/uploads/<?php echo $row['photo_path']; ?>" 
      class="w-full rounded-t-xl cursor-pointer"
      style="max-height:300px; object-fit:contain;"
      onclick="openModal(this.src)">

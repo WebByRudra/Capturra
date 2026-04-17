@@ -5,7 +5,17 @@ requireRole("client");
 $username = $_SESSION['username'];
 $name     = $_SESSION['name'];
 ?>
+<?php
+include("../config/database.php");
 
+$sql = "SELECT photos.*, users.username,
+        (SELECT COUNT(*) FROM likes WHERE likes.photo_id = photos.id) AS like_count
+        FROM photos
+        JOIN users ON photos.user_id = users.id
+        ORDER BY photos.upload_date DESC";
+
+$result = mysqli_query($conn, $sql);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -316,96 +326,47 @@ document.addEventListener('click', function(event) {
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">🔥 Trending Photos</h2>
                         <div class="photo-grid">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
-                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Mountain landscape" class="w-full" style="height:auto; object-fit:contain;">
-                                <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
-                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Creator" class="w-8 h-8 rounded-full">
-                                        <div>
-                                            <p class="font-semibold text-gray-900">Alex Chen</p>
-                                            <p class="text-sm text-gray-500">@alexphoto</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-700 mb-3">Breathtaking sunrise at Mount Furano</p>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center space-x-4">
-                                            <button onclick="likePost(this)" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition-colors">
-                                                <span>❤️</span>
-                                                <span class="text-sm">234</span>
-                                            </button>
-                                            <button onclick="commentPost()" class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors">
-                                                <span>💬</span>
-                                                <span class="text-sm">45</span>
-                                            </button>
-                                            <button onclick="sharePost()" class="flex items-center space-x-1 text-gray-500 hover:text-green-500 transition-colors">
-                                                <span>↗️</span>
-                                                <span class="text-sm">12</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<?php while($row = mysqli_fetch_assoc($result)) { ?>
+    
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
+        
+        <!-- CLICKABLE IMAGE -->
+        <a href="photo.php?id=<?php echo $row['id']; ?>">
+            <img src="/Capturra/uploads/<?php echo basename(trim($row['photo_path'])); ?>"
+     class="w-full"
+     style="max-height:300px; object-fit:contain;">
+    </a>
+        <div class="p-4">
+            
+            <!-- USER INFO -->
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    👤
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-900">
+                        <?php echo htmlspecialchars($row['username']); ?>
+                    </p>
+                </div>
+            </div>
 
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
-                                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop" alt="Wedding photo" class="w-full" style="height:auto; object-fit:contain;">
-                                <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
-                                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Creator" class="w-8 h-8 rounded-full">
-                                        <div>
-                                            <p class="font-semibold text-gray-900">Sarah Johnson</p>
-                                            <p class="text-sm text-gray-500">@sarahweddings</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-700 mb-3">Perfect moment captured ✨</p>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center space-x-4">
-                                            <button onclick="likePost(this)" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition-colors">
-                                                <span>❤️</span>
-                                                <span class="text-sm">567</span>
-                                            </button>
-                                            <button onclick="commentPost()" class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors">
-                                                <span>💬</span>
-                                                <span class="text-sm">89</span>
-                                            </button>
-                                            <button onclick="sharePost()" class="flex items-center space-x-1 text-gray-500 hover:text-green-500 transition-colors">
-                                                <span>↗️</span>
-                                                <span class="text-sm">23</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- ACTIONS -->
+            <div class="flex items-center space-x-4">
+                <button onclick="likePost(<?php echo $row['id']; ?>, this)" 
+                    class="flex items-center space-x-1 text-gray-500">
+    ❤️              <span class="text-sm"><?php echo $row['like_count']; ?></span>
+                    </button>   
 
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
-                                <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop" alt="Street photography" class="w-full" style="height:auto; object-fit:contain;">
-                                <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
-                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face" alt="Creator" class="w-8 h-8 rounded-full">
-                                        <div>
-                                            <p class="font-semibold text-gray-900">Mike Rodriguez</p>
-                                            <p class="text-sm text-gray-500">@mikestreet</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-700 mb-3">Urban life in motion</p>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center space-x-4">
-                                            <button onclick="likePost(this)" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition-colors">
-                                                <span>❤️</span>
-                                                <span class="text-sm">189</span>
-                                            </button>
-                                            <button onclick="commentPost()" class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors">
-                                                <span>💬</span>
-                                                <span class="text-sm">34</span>
-                                            </button>
-                                            <button onclick="sharePost()" class="flex items-center space-x-1 text-gray-500 hover:text-green-500 transition-colors">
-                                                <span>↗️</span>
-                                                <span class="text-sm">8</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <button class="flex items-center space-x-1 text-gray-500 hover:text-blue-500">
+                    💬 <span class="text-sm"><?php echo $row['comment_count'] ?? 0; ?></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+<?php } ?>
+</div>
                     </section>
 
                     <!-- Followed Creators' Updates -->
@@ -668,6 +629,9 @@ document.addEventListener('click', function(event) {
                 alert(`Exploring ${tagName} photos!`);
             });
         });
+
+        btn.classList.add("scale-125");
+setTimeout(() => btn.classList.remove("scale-125"), 150);
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'977391c52447f651',t:'MTc1NjU0OTM3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 
@@ -714,4 +678,27 @@ function logout() {
         localStorage.setItem(KEY, isDark ? '1' : '0');
     });
 })();
+
+function likePost(photoId, btn) {
+    fetch("like.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "photo_id=" + photoId
+    })
+    .then(res => res.json())
+    .then(data => {
+        let countSpan = btn.querySelector("span");
+        let count = parseInt(countSpan.textContent);
+
+        if (data.status === "liked") {
+            countSpan.textContent = count + 1;
+            btn.classList.add("text-red-500");
+        } else {
+            countSpan.textContent = count - 1;
+            btn.classList.remove("text-red-500");
+        }
+    });
+}
 </script>
