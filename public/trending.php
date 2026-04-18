@@ -1,16 +1,19 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "capturra");
 
-// check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// run query
-$sql = "SELECT * FROM photos ORDER BY total_likes DESC LIMIT 9";
+$sql = "SELECT photos.*, COUNT(likes.id) AS total_likes 
+        FROM photos 
+        LEFT JOIN likes ON likes.photo_id = photos.id 
+        GROUP BY photos.id 
+        ORDER BY total_likes DESC 
+        LIMIT 9";
+
 $result = $conn->query($sql);
 
-// check query
 if(!$result){
     die("Query Failed: " . $conn->error);
 }

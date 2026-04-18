@@ -7,6 +7,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
+        html {
+  scroll-behavior: smooth;
+}
+
+/* Glass effect cards */
+.glass {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Hover zoom effect */
+.post-img {
+  transition: transform 0.4s ease;
+}
+.post-card:hover .post-img {
+  transform: scale(1.05);
+}
+
+/* Smooth card hover */
+.post-card {
+  transition: all 0.3s ease;
+}
+.post-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Gradient background */
+body {
+  background: linear-gradient(135deg, #f3f4f6, #e0e7ff);
+}
+
+/* Modal animation */
+#imageModal img {
+  animation: zoomIn 0.3s ease;
+}
+@keyframes zoomIn {
+  from {transform: scale(0.8); opacity: 0;}
+  to {transform: scale(1); opacity: 1;}
+}
         :root {
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
@@ -255,7 +295,9 @@
                     <div><strong>@CreativePixel</strong><p style="font-size: 0.85rem; opacity:0.7">Best platform for creators 🔥</p></div>
                 </div>
             </div>
+            
         </div>
+
     </section>
 
     <section style="text-align:center; padding-bottom: 120px;">
