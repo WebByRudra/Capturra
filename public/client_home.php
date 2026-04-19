@@ -124,10 +124,12 @@ $result = mysqli_query($conn, $sql);
                 
                 <!-- Navigation Links -->
                 <div class="flex items-center space-x-6">
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Creators</a>
+                    <a href="client_home.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
+                    <a href="explore.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
+                    <a href="trending.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
+                    <a href="creator.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Creators</a>
+                    <a href="blogs.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Blogs</a>
+                    <a href="support.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Support</a>
                     <div class="relative inline-block">
     <div class="relative cursor-pointer group" onclick="toggleMessages(event)">
         <span class="text-2xl group-hover:scale-110 transition-transform iagenline-block">  💬</span>
