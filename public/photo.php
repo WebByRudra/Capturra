@@ -24,6 +24,10 @@ if (mysqli_num_rows($result) == 0) {
 
 $photo = mysqli_fetch_assoc($result);
 
+// Normalize photo path
+$photo_filename = basename(str_replace('\\', '/', $photo['photo_path']));
+$img_src = "/Capturra/uploads/" . $photo_filename;
+
 // FETCH COMMENTS
 $comment_sql = "SELECT comments.*, users.username 
                 FROM comments 
@@ -48,7 +52,8 @@ $comments = mysqli_query($conn, $comment_sql);
 
     <!-- IMAGE -->
     <div class="w-full bg-black flex justify-center">
-        <img src="/Capturra/uploads/<?php echo basename($row['photo_path']); ?>"
+        <img src="<?php echo htmlspecialchars($img_src); ?>"
+             alt="Photo by <?php echo htmlspecialchars($photo['username']); ?>"
              class="max-h-[500px] object-contain">
     </div>
 

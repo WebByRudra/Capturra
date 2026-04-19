@@ -12,10 +12,9 @@ $search   = isset($_GET['q']) ? mysqli_real_escape_string($conn, $_GET['q']) : '
 $category = isset($_GET['cat']) ? mysqli_real_escape_string($conn, $_GET['cat']) : '';
 
 $where = "WHERE 1=1";
-if ($search)   $where .= " AND (users.username LIKE '%$search%' OR users.name LIKE '%$search%' OR photos.description LIKE '%$search%')";
-if ($category) $where .= " AND photos.category = '$category'";
+if ($search)   $where .= " AND (users.username LIKE '%$search%' OR CONCAT(users.first_name, ' ', users.last_name) LIKE '%$search%' OR photos.description LIKE '%$search%')";
 
-$sql = "SELECT photos.*, users.username, users.id AS photographer_id, users.name AS photographer_name,
+$sql = "SELECT photos.*, users.username, users.id AS photographer_id, CONCAT(users.first_name, ' ', users.last_name) AS photographer_name,
         (SELECT COUNT(*) FROM likes WHERE likes.photo_id = photos.id) AS like_count,
         (SELECT COUNT(*) FROM comments WHERE comments.photo_id = photos.id) AS comment_count
         FROM photos
@@ -25,8 +24,7 @@ $sql = "SELECT photos.*, users.username, users.id AS photographer_id, users.name
 $result = mysqli_query($conn, $sql);
 
 // Categories from DB
-$cat_sql = "SELECT DISTINCT category FROM photos WHERE category IS NOT NULL AND category != '' ORDER BY category";
-$cat_result = mysqli_query($conn, $cat_sql);
+$cat_result = $cat_result ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,6 +49,26 @@ $cat_result = mysqli_query($conn, $cat_sql);
         .masonry { columns: 3; column-gap: 1.5rem; }
         @media(max-width:768px) { .masonry { columns: 2; } }
         @media(max-width:480px) { .masonry { columns: 1; } }
+
+        .photo-card {
+    position: relative;
+}
+
+.heart-anim {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 50px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.heart-anim.show {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+}
 
         .cap-card { background: #16161f; border: 1px solid #2a2a3e; border-radius: 14px; }
         .search-input { background: #16161f; border: 1px solid #3a3a5c; border-radius: 10px; color: #e2e0f0; padding: 10px 16px 10px 42px; outline: none; width: 100%; font-size: 14px; transition: border-color .3s; }
@@ -120,8 +138,9 @@ $cat_result = mysqli_query($conn, $cat_sql);
         <div class="photo-card">
             <a href="photo.php?id=<?php echo $row['id']; ?>">
                 <img src="<?php echo htmlspecialchars($img_src); ?>"
-                     class="w-full" style="display:block;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+     ondblclick="handleDoubleClick(event, this, <?php echo $row['id']; ?>)"
+     class="w-full cursor-pointer">
+     <div class="heart-anim">❤️</div>
                 <div style="display:none; height:160px; background:#1a1a2e; align-items:center; justify-content:center; color:#6b6b8a; font-size:13px;">📷 Not found</div>
             </a>
             <div style="padding:14px;">
@@ -169,7 +188,7 @@ $cat_result = mysqli_query($conn, $cat_sql);
         <div class="cap-card" style="padding:20px;">
             <h3 style="font-size:14px; font-weight:600; color:#fff; margin:0 0 16px; padding-bottom:12px; border-bottom:1px solid #2a2a3e;">📸 Top Photographers</h3>
             <?php
-            $top_sql = "SELECT users.id, users.name, users.username,
+            $top_sql = "SELECT users.id, CONCAT(users.first_name, ' ', users.last_name) AS name, users.username,
                         COUNT(DISTINCT photos.id) AS photo_count,
                         COUNT(DISTINCT likes.id) AS total_likes
                         FROM users
@@ -259,6 +278,33 @@ function logout() {
         .then(res => res.json())
         .then(data => { if(data.status) window.location.href="/Capturra/public/login.html"; });
 }
+
+function handleDoubleClick(e, imgEl, photoId) {
+    e.preventDefault();
+
+    fetch("like.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "photo_id=" + photoId
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.status === "error") {
+            alert("Login required");
+            return;
+        }
+
+        let card = imgEl.closest('.photo-card');
+        let likeBtn = card.querySelector("button span");
+
+        if (likeBtn) {
+            let count = parseInt(likeBtn.textContent);
+            likeBtn.textContent = data.status === "liked" ? count + 1 : count - 1;
+        }
+    });
+}
+
 </script>
 </body>
 </html>

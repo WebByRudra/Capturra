@@ -1,14 +1,17 @@
 <?php
+header('Content-Type: application/json');
 session_start();
 include("../config/database.php");
 
-if(!isset($_SESSION['user_id'])){
-    header("Location: ../public/login.php");
+// Check login
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(["status" => "error", "message" => "not_logged_in"]);
     exit();
 }
 
-if(!isset($_POST['photo_id'])){
-    header("Location: ../public/photographer_home.php");
+// Check photo_id
+if (!isset($_POST['photo_id'])) {
+    echo json_encode(["status" => "error", "message" => "no_photo_id"]);
     exit();
 }
 
@@ -21,17 +24,14 @@ $stmt->bind_param("ii", $user_id, $photo_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if($result->num_rows > 0){
+if ($result->num_rows > 0) {
 
     // Unlike
     $stmt = $conn->prepare("DELETE FROM likes WHERE user_id=? AND photo_id=?");
     $stmt->bind_param("ii", $user_id, $photo_id);
     $stmt->execute();
 
-    // Decrease like count
-    $stmt = $conn->prepare("UPDATE photos SET likes = likes - 1 WHERE id=?");
-    $stmt->bind_param("i", $photo_id);
-    $stmt->execute();
+    echo json_encode(["status" => "unliked"]);
 
 } else {
 
@@ -40,12 +40,6 @@ if($result->num_rows > 0){
     $stmt->bind_param("ii", $user_id, $photo_id);
     $stmt->execute();
 
-    // Increase like count
-    $stmt = $conn->prepare("UPDATE photos SET likes = likes + 1 WHERE id=?");
-    $stmt->bind_param("i", $photo_id);
-    $stmt->execute();
+    echo json_encode(["status" => "liked"]);
 }
-
-header("Location: ../public/photographer_home.php");
-exit();
 ?>

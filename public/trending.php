@@ -8,30 +8,52 @@ $user_id  = $_SESSION['user_id'] ?? 0;
 $role     = $_SESSION['role'] ?? 'client';
 
 // Trending Photos — top 3 by likes
-$photos_sql = "SELECT photos.*, users.username, users.id AS photographer_id, users.name AS photographer_name,
-               COUNT(likes.id) AS like_count,
-               (SELECT COUNT(*) FROM comments WHERE comments.photo_id = photos.id) AS comment_count
+$photos_sql = "SELECT photos.*, 
+               users.username, 
+               users.id AS photographer_id, 
+               CONCAT(users.first_name, ' ', users.last_name) AS photographer_name,
+
+               COUNT(DISTINCT likes.id) AS like_count,
+               COUNT(DISTINCT comments.id) AS comment_count,
+
+               (
+                   (COUNT(DISTINCT likes.id) * 2 + COUNT(DISTINCT comments.id) * 3) /
+                   (TIMESTAMPDIFF(HOUR, photos.upload_date, NOW()) + 2)
+               ) AS score
+
                FROM photos
                JOIN users ON photos.user_id = users.id
                LEFT JOIN likes ON likes.photo_id = photos.id
+               LEFT JOIN comments ON comments.photo_id = photos.id
+
                GROUP BY photos.id
-               ORDER BY like_count DESC
-               LIMIT 3";
+               ORDER BY score DESC
+               LIMIT 6";
 $photos_result = mysqli_query($conn, $photos_sql);
 
 // Trending Photographers — top 3 by total likes on their photos
-$photographers_sql = "SELECT users.id, users.name, users.username,
+$photographers_sql = "SELECT users.id, 
+                      CONCAT(users.first_name, ' ', users.last_name) AS name, 
+                      users.username,
+
                       COUNT(DISTINCT photos.id) AS photo_count,
-                      COUNT(likes.id) AS total_likes,
-                      COUNT(DISTINCT follows.follower_id) AS follower_count
+                      COUNT(DISTINCT likes.id) AS total_likes,
+                      COUNT(DISTINCT follows.follower_id) AS follower_count,
+
+                      (
+                          (COUNT(DISTINCT likes.id) * 2 + COUNT(DISTINCT follows.follower_id) * 3)
+                      ) AS score
+
                       FROM users
                       LEFT JOIN photos  ON users.id = photos.user_id
                       LEFT JOIN likes   ON photos.id = likes.photo_id
                       LEFT JOIN follows ON users.id = follows.following_id
+
                       WHERE users.role = 'photographer'
+
                       GROUP BY users.id
-                      ORDER BY total_likes DESC
-                      LIMIT 3";
+                      ORDER BY score DESC
+                      LIMIT 5";
 $photographers_result = mysqli_query($conn, $photographers_sql);
 ?>
 <!DOCTYPE html>
