@@ -424,46 +424,80 @@ document.addEventListener('click', function(event) {
                         </button>
                     </div>
                 </div>
-
-                <?php if(mysqli_num_rows($result) > 0) { ?>
+<?php if(mysqli_num_rows($result) > 0) { ?>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
 <?php while($row = mysqli_fetch_assoc($result)) { ?>
 
-    <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
+<div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
-        <!-- Image -->
-       <img src="/Capturra/uploads/<?php echo $row['photo_path']; ?>" 
-     class="w-full rounded-t-xl cursor-pointer"
-     style="max-height:300px; object-fit:contain;"
-     onclick="openModal(this.src)">
+    <!-- Image -->
+    <img src="/Capturra/uploads/<?php echo $row['photo_path']; ?>" 
+         class="w-full rounded-t-xl cursor-pointer"
+         style="max-height:300px; object-fit:contain;"
+         onclick="openModal(this.src)">
 
-        <!-- Like Button -->
-        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
-            <form action="../actions/like.php" method="POST">
-                <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
-                <button type="submit" class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
-                    ❤️ <span class="text-sm"><?php echo $row['total_likes']; ?></span>
-                </button>
-            </form>
-        </div>
-
-        <!-- Comment Button -->
-        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
-            <button class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
-                💬 <span class="text-sm">0</span>
+    <!-- Like Button -->
+    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
+        <form action="../actions/like.php" method="POST">
+            <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
+            <button type="submit" class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
+                ❤️ <span class="text-sm"><?php echo $row['total_likes']; ?></span>
             </button>
-        </div>
+        </form>
+    </div>
 
-        <!-- Upload Time -->
-        <div class="px-4 py-2 text-xs text-gray-500">
-            <?php echo date('d M Y', strtotime($row['upload_date'])); ?>
-        </div>
+    <!-- Comment Button -->
+    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
+        <button onclick="toggleComment(this)" class="bg-white px-3 py-2 rounded-full shadow flex items-center space-x-2">
+            💬 <span class="text-sm"><?php echo $total_comments ?? 0; ?></span>
+        </button>
+    </div>
+
+    <!-- Comments -->
+    <div class="px-4 mt-2 text-sm text-gray-800">
+
+        <?php if(!empty($hidden_comments)): ?>
+            <div onclick="showAllComments(this)" class="text-gray-500 cursor-pointer text-sm mb-1">
+                View all <?php echo $total_comments; ?> comments
+            </div>
+
+            <div class="hidden older-comments">
+                <?php foreach($hidden_comments as $comment): ?>
+                    <div>
+                        <b><?php echo htmlspecialchars($comment['username']); ?>:</b>
+                        <?php echo htmlspecialchars($comment['comment']); ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php foreach(($initial_comments ?? []) as $comment): ?>
+            <div>
+                <b><?php echo htmlspecialchars($comment['username']); ?>:</b>
+                <?php echo htmlspecialchars($comment['comment']); ?>
+            </div>
+        <?php endforeach; ?>
 
     </div>
 
-<?php } ?>
+    <!-- Comment Box -->
+    <div class="comment-box hidden px-4 pb-4">
+        <form action="../actions/comment.php" method="POST">
+            <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
+            <input type="text" name="comment" required placeholder="Write a comment..." class="border p-2 w-full">
+        </form>
+    </div>
+
+    <!-- Upload Time -->
+    <div class="px-4 py-2 text-xs text-gray-500">
+        <?php echo date('d M Y', strtotime($row['upload_date'])); ?>
+    </div>
+
+</div>
+
+<?php } ?>  <!-- while close -->
 
 </div>
 
@@ -472,123 +506,6 @@ document.addEventListener('click', function(event) {
 <p class="text-gray-500 px-4">No photos uploaded yet.</p>
 
 <?php } ?>
-
-<!-- Your Recent Uploads (single-column feed) -->
-<div class="max-w-3xl mx-auto w-full">
-    <div class="grid grid-cols-1 gap-6 p-4">
-
-<?php if(mysqli_num_rows($result) > 0): ?>
-    <?php while($row = mysqli_fetch_assoc($result)): ?>
-
-    <div class="post-card bg-white rounded-xl shadow hover:shadow-lg transition-all overflow-hidden">
-
-        <!-- Photo with side action buttons (no crop) -->
-        <div class="relative">
-<img src="/Capturra/<?php echo $row['image']; ?>" 
-     class="w-full rounded-t-xl"
-     style="max-height:500px; object-fit:contain;">
-            <!-- Like button (left) -->
-            <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
-                <form action="../actions/like.php" method="POST">
-                    <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="bg-white/80 hover:bg-white text-gray-800 px-3 py-2 rounded-full shadow transition flex items-center space-x-2">
-                        <span>❤️</span>
-                        <span class="text-sm"><?php echo $row['total_likes']; ?></span>
-                    </button>
-                </form>
-            </div>
-
-<?php
-$initial_comments = $initial_comments ?? [];
-$hidden_comments = $hidden_comments ?? [];
-$total_comments = $total_comments ?? 0;
-?>
-
-            <!-- Comment button (right) -->
-            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20">
-                <button onclick="toggleComment(this)" class="bg-white/80 hover:bg-white text-gray-800 px-3 py-2 rounded-full shadow transition flex items-center space-x-2">
-                    <span>💬</span>
-                    <span class="text-sm"><?php echo $total_comments; ?></span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Comments -->
-        <div class="px-4 mt-2 text-sm text-gray-800">
-            <?php if(!empty($hidden_comments)): ?>
-                <div class="view-all-comments text-gray-500 cursor-pointer text-sm mb-1" onclick="showAllComments(this)">
-                    View all <?php echo $total_comments; ?> comments
-                </div>
-                <div class="hidden older-comments">
-                    <?php foreach($hidden_comments as $comment): ?>
-                        <div class="mb-1">
-                            <span class="font-semibold"><?php echo htmlspecialchars($comment['username']); ?>:</span>
-                            <span><?php echo htmlspecialchars($comment['comment']); ?></span>
-                            <div class="text-xs text-gray-400">
-                                <?php echo timeAgo($comment['created_at']); ?>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-
-            <?php foreach(($initial_comments ?? []) as $comment): ?>
-                <div class="mb-1">
-                    <span class="font-semibold"><?php echo htmlspecialchars($comment['username']); ?>:</span>
-                    <span><?php echo htmlspecialchars($comment['comment']); ?></span>
-                    <div class="text-xs text-gray-400">
-                        <?php echo timeAgo($comment['created_at']); ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- Comment Box -->
-        <div class="comment-box hidden mt-2 px-4 pb-4">
-            <form action="../actions/comment.php" method="POST" class="flex gap-2">
-                <input type="hidden" name="photo_id" value="<?php echo $row['id']; ?>">
-                <input type="text" name="comment" required
-                       placeholder="Write a comment..."
-                       class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                <button type="submit"
-                        class="bg-purple-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-600">
-                    Post
-                </button>
-            </form>
-        </div>
-
-        <!-- Upload Time -->
-        <div class="px-4 pt-2 text-xs text-gray-500">
-            <span title="<?php echo date('d M Y, H:i', strtotime($row['upload_date'])); ?>">
-                <?php echo timeAgo($row['upload_date']); ?>
-            </span>
-        </div>
-
-    </div>
-
-    <?php endwhile; ?>
-<?php else: ?>
-        <p class="text-gray-500 px-4">No photos uploaded yet.</p>
-<?php endif; ?>
-
-    </div>
-</div>
-
-<!-- JS -->
-<script>
-function toggleComment(element) {
-    const commentBox = element.closest('.post-card').querySelector('.comment-box');
-    if(commentBox) commentBox.classList.toggle('hidden');
-}
-
-function showAllComments(element) {
-    const card = element.closest('.post-card');
-    const hiddenComments = card.querySelector('.older-comments');
-    if(hiddenComments) hiddenComments.classList.remove('hidden');
-    element.style.display = 'none';
-}
-</script>
-
 
                 <!-- Trending Photos -->
                 <section>
