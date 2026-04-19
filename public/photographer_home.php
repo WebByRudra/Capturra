@@ -195,9 +195,9 @@ if (!$result) {
                 
                 <!-- Navigation Links -->
                 <div class="flex items-center space-x-6">
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
+                    <a href="photographer_home.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Home</a>
+                    <a href="explore.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
+                    <a href="trending.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
                     
                     
 

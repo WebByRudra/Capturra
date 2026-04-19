@@ -27,9 +27,8 @@ if(!$result){
 
     <div style="background:white; padding:10px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
         
-        <img src="/Capturra/<?php echo $row['image']; ?>" 
-             style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
-
+        <img src="/Capturra/uploads/<?php echo $row['photo_path']; ?>" 
+     style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
         <p style="margin-top:5px;">❤️ <?php echo $row['total_likes']; ?> Likes</p>
 
     </div>

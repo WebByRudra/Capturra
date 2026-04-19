@@ -179,13 +179,20 @@
                 </p>
 
                 <div class="max-w-2xl mx-auto mb-8">
-                    <div class="search-bar rounded-2xl p-2 flex items-center shadow-lg">
-                        <input type="text" placeholder="Search photographers, locations, or styles..."
-                            class="flex-1 bg-transparent px-4 py-3 focus:outline-none"
-                            style="color:#e2e0f0;" placeholder-style="color:#6b6b8a;">
-                        <button class="gradient-bg text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity">
-                            Search
-                        </button>
+                    <!-- Live Search Container -->
+                    <div class="relative">
+                        <div class="search-bar rounded-2xl p-2 flex items-center shadow-lg">
+                            <input type="text" id="searchInput" placeholder="Search photographers, locations, or styles..."
+                                class="flex-1 bg-transparent px-4 py-3 focus:outline-none"
+                                style="color:#e2e0f0;" placeholder-style="color:#6b6b8a;">
+                            <button class="gradient-bg text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity">
+                                Search
+                            </button>
+                        </div>
+                        <!-- Live Search Dropdown -->
+                        <div id="searchDropdown" class="absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-600 rounded-lg shadow-lg hidden z-50 max-h-64 overflow-y-auto">
+                            <!-- Results will be populated here -->
+                        </div>
                     </div>
                 </div>
 
@@ -506,6 +513,101 @@
             </div>
         </footer>
     </div>
+
+    <!-- Live Search JavaScript -->
+    <script>
+        // Get DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+
+        let debounceTimer;
+
+        // Build correct endpoint path: same folder as 2.html
+        const searchEndpoint = 'search.php';
+
+        // Listen for input events on search bar with debounce
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            const query = this.value.trim();
+
+            if (query === '') {
+                searchDropdown.classList.add('hidden');
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+
+        // Perform search request to backend
+        async function performSearch(query) {
+            try {
+                const url = `search.php?q=${encodeURIComponent(query)}`;
+                console.log('Fetching search from:', url);
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("FINAL DATA:", data);
+                renderResults(data);
+            } catch (error) {
+                console.error('Search error:', error);
+                searchDropdown.innerHTML = `<div class="px-4 py-3 text-gray-400 text-sm">Error: ${error.message}</div>`;
+                searchDropdown.classList.remove('hidden');
+            }
+        }
+
+        // Render search dropdown results
+        function renderResults(data) {
+            let html = '';
+
+            if (data.users && data.users.length > 0) {
+                html += '<div class="px-4 py-2 text-gray-300 text-sm font-semibold border-b border-gray-600">Users</div>';
+                data.users.forEach(user => {
+                    html += `
+                        <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-colors" onclick="window.location.href='/Capturra/public/profile.php?username=${user.username}'">
+                            <div class="font-semibold text-white">${user.name}</div>
+                            <div class="text-sm text-gray-400">@${user.username}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (data.photos && data.photos.length > 0) {
+                if (html !== '') html += '<div class="border-t border-gray-600"></div>';
+                html += '<div class="px-4 py-2 text-gray-300 text-sm font-semibold border-b border-gray-600">Photos</div>';
+                data.photos.forEach(photo => {
+                    html += `
+                        <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-colors flex items-center space-x-3" onclick="window.location.href='/Capturra/public/photo.php?id=${photo.id}'">
+                            <img src="${photo.photo_path}" alt="Photo" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-400">@${photo.username}</div>
+                                <div class="text-white text-sm">${photo.caption || 'Photo'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (html === '') {
+                html = '<div class="px-4 py-3 text-gray-400">No results found</div>';
+            }
+
+            searchDropdown.innerHTML = html;
+            searchDropdown.classList.remove('hidden');
+        }
+
+        // Hide dropdown when clicking outside the search container
+        document.addEventListener('click', function(e) {
+            if (!searchInput.closest('.relative').contains(e.target)) {
+                searchDropdown.classList.add('hidden');
+            }
+        });
+    </script>
 
     <script>
         // (Tumhara original JavaScript bilkul same rahega — koi change nahi)
