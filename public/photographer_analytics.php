@@ -7,48 +7,82 @@ $username = $_SESSION['username'];
 $name     = $_SESSION['name'];
 $user_id  = $_SESSION['user_id'];
 
-// --- 1. BASIC STATS ---
-$total_photos = 0;
-$res = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM photos WHERE user_id='$user_id'");
-if($res && $r = mysqli_fetch_assoc($res)) $total_photos = $r['cnt'];
-
-$total_likes = 0;
-$res = mysqli_query($conn, "SELECT COUNT(l.id) AS cnt FROM likes l JOIN photos p ON l.photo_id = p.id WHERE p.user_id='$user_id'");
-if($res && $r = mysqli_fetch_assoc($res)) $total_likes = $r['cnt'];
-
-$total_comments = 0;
-$res = mysqli_query($conn, "SELECT COUNT(c.id) AS cnt FROM comments c JOIN photos p ON c.photo_id = p.id WHERE p.user_id='$user_id'");
-if($res && $r = mysqli_fetch_assoc($res)) $total_comments = $r['cnt'];
-
-// --- 2. CHART DATA (Last 7 Days) ---
-$chart_labels = [];
-$chart_values = [];
-for ($i = 6; $i >= 0; $i--) {
-    $date = date('Y-m-d', strtotime("-$i days"));
-    $display_date = date('D', strtotime($date)); // e.g., "Mon"
-    
-    $sql_chart = "SELECT COUNT(l.id) as daily_cnt 
-                  FROM likes l 
-                  JOIN photos p ON l.photo_id = p.id 
-                  WHERE p.user_id='$user_id' AND DATE(l.created_at) = '$date'";
-    $res_chart = mysqli_query($conn, $sql_chart);
-    $row_chart = mysqli_fetch_assoc($res_chart);
-    
-    $chart_labels[] = "'$display_date'";
-    $chart_values[] = $row_chart['daily_cnt'] ?? 0;
+/**
+ * Helper function to prevent "Fatal error: Uncaught TypeError"
+ * It checks if query is successful before fetching.
+ */
+function safeFetchCount($conn, $sql) {
+    $result = mysqli_query($conn, $sql);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['c'];
+    }
+    return 0; // Return 0 if table missing or query fails
 }
 
-// --- 3. TOP PHOTOS ---
-$top_photos = [];
-$sql = "SELECT p.id, p.photo_path, COUNT(l.id) AS likes 
-        FROM photos p 
-        LEFT JOIN likes l ON p.id = l.photo_id 
-        WHERE p.user_id='$user_id' 
-        GROUP BY p.id 
-        ORDER BY likes DESC LIMIT 6";
-$res = mysqli_query($conn, $sql);
-if($res) {
-    while($row = mysqli_fetch_assoc($res)) { $top_photos[] = $row; }
+// Total photos
+$total_photos = safeFetchCount($conn, "SELECT COUNT(*) AS c FROM photos WHERE user_id='$user_id'");
+
+// Total likes
+$total_likes = safeFetchCount($conn, "SELECT COUNT(likes.id) AS c FROM likes JOIN photos ON likes.photo_id = photos.id WHERE photos.user_id='$user_id'");
+
+// Total comments (Safe even if table doesn't exist)
+$total_comments = safeFetchCount($conn, "SELECT COUNT(comments.id) AS c FROM comments JOIN photos ON comments.photo_id = photos.id WHERE photos.user_id='$user_id'");
+
+// Followers
+$followers = safeFetchCount($conn, "SELECT COUNT(*) AS c FROM follows WHERE following_id='$user_id'");
+
+// Top 5 photos by likes
+$top_photos_sql = "SELECT photos.*, COUNT(likes.id) AS like_count
+                   FROM photos LEFT JOIN likes ON photos.id = likes.photo_id
+                   WHERE photos.user_id='$user_id'
+                   GROUP BY photos.id ORDER BY like_count DESC LIMIT 5";
+$top_photos = mysqli_query($conn, $top_photos_sql);
+
+// Recent uploads (last 7 days)
+$recent_sql = "SELECT DATE(upload_date) AS day, COUNT(*) AS uploads
+               FROM photos WHERE user_id='$user_id'
+               AND upload_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+               GROUP BY DATE(upload_date) ORDER BY day ASC";
+$recent_result = mysqli_query($conn, $recent_sql);
+
+$chart_labels = []; $chart_data = [];
+if ($recent_result) {
+    while ($r = mysqli_fetch_assoc($recent_result)) {
+        $chart_labels[] = date('d M', strtotime($r['day']));
+        $chart_data[]   = (int)$r['uploads'];
+    }
+}
+
+// Likes per day last 7 days
+$likes_sql = "SELECT DATE(likes.created_at) AS day, COUNT(*) AS cnt
+              FROM likes JOIN photos ON likes.photo_id = photos.id
+              WHERE photos.user_id='$user_id'
+              AND likes.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+              GROUP BY DATE(likes.created_at) ORDER BY day ASC";
+$likes_chart_result = mysqli_query($conn, $likes_sql);
+$likes_labels = []; $likes_data = [];
+if ($likes_chart_result) {
+    while ($r = mysqli_fetch_assoc($likes_chart_result)) {
+        $likes_labels[] = date('d M', strtotime($r['day']));
+        $likes_data[]   = (int)$r['cnt'];
+    }
+}
+
+// Rank logic (Using RANK() if supported, else fallback)
+$rank_sql = "SELECT u.id, COUNT(l.id) AS total_likes,
+             RANK() OVER (ORDER BY COUNT(l.id) DESC) AS rnk
+             FROM users u
+             LEFT JOIN photos p ON u.id = p.user_id
+             LEFT JOIN likes l ON p.id = l.photo_id
+             WHERE u.role = 'photographer'
+             GROUP BY u.id";
+$rank_result = mysqli_query($conn, $rank_sql);
+$my_rank = '—';
+if ($rank_result) {
+    while ($r = mysqli_fetch_assoc($rank_result)) {
+        if ($r['id'] == $user_id) { $my_rank = '#' . $r['rnk']; break; }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -56,168 +90,123 @@ if($res) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capturra | Pro Analytics</title>
+    <title>Capturra - Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0f0f13; color: #e2e0f0; }
+        .gradient-bg { background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); }
+        nav { background: #0d0d11; border-bottom: 1px solid #2a2a3e; }
+        .stat-card {
+            background: #16161f; border: 1px solid #2a2a3e; border-radius: 14px;
+            padding: 24px; transition: all .3s;
+        }
+        .stat-card:hover { border-color: #7c3aed; box-shadow: 0 8px 24px rgba(124,58,237,0.12); }
+        .cap-card { background: #16161f; border: 1px solid #2a2a3e; border-radius: 14px; padding: 24px; }
+        .photo-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid #1e1e2e; }
+        .photo-row:last-child { border-bottom: none; }
+        .progress-bar-bg { background: #1e1e2e; border-radius: 20px; height: 6px; overflow: hidden; }
+        .progress-bar     { background: linear-gradient(90deg, #7c3aed, #a855f7); height: 100%; border-radius: 20px; }
+        .trend-up   { color: #4ade80; }
+        footer { background: #080810; border-color: #1e1a2e; }
     </style>
 </head>
-<body class="text-slate-900 pb-20">
+<body class="min-h-screen">
 
-    <nav class="sticky top-0 z-50 bg-white/70 backdrop-blur-lg border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-lg font-extrabold tracking-tight">Capturra</h1>
-                    <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Analytics Engine</p>
-                </div>
-            </div>
-            <a href="photographer_home.php" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-100 transition-all flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Back
-            </a>
+
+
+<div style="max-width:1100px; margin:0 auto; padding:36px 24px 60px;">
+
+    <div style="margin-bottom:28px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+            <h1 style="font-size:26px; font-weight:700; color:#fff; margin:0 0 4px;">📊 Analytics</h1>
+            <p style="font-size:13px; color:#6b6b8a; margin:0;">Your performance overview, <?php echo htmlspecialchars($name); ?></p>
         </div>
-    </nav>
+        <div style="font-size:13px; color:#6b6b8a;">Last updated: <?php echo date('d M Y, H:i'); ?></div>
+    </div>
 
-    <main class="max-w-7xl mx-auto px-6 pt-10">
-        
-        <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900">Portfolio Overview</h2>
-                <p class="text-slate-500 font-medium">Hello, <?php echo htmlspecialchars($name); ?>. Here is your latest performance data.</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;">
+        <div class="stat-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:#1e1535;display:flex;align-items:center;justify-content:center;font-size:18px;">📸</div>
             </div>
-            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Last updated: Just now</div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="p-3 bg-indigo-50 text-indigo-600 rounded-2xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></span>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Total Photos</p>
-                <h3 class="text-4xl font-black text-slate-900 mt-1"><?php echo $total_photos; ?></h3>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="p-3 bg-rose-50 text-rose-600 rounded-2xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></span>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Total Likes</p>
-                <h3 class="text-4xl font-black text-rose-600 mt-1"><?php echo $total_likes; ?></h3>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="p-3 bg-blue-50 text-blue-600 rounded-2xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg></span>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Comments</p>
-                <h3 class="text-4xl font-black text-blue-600 mt-1"><?php echo $total_comments; ?></h3>
-            </div>
+            <div style="font-size:28px; font-weight:700; color:#fff;"><?php echo $total_photos; ?></div>
+            <div style="font-size:12px; color:#6b6b8a;">Total Photos</div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            
-            <div class="lg:col-span-2 space-y-10">
-                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                    <div class="flex items-center justify-between mb-8">
-                        <h3 class="text-xl font-extrabold tracking-tight">Engagement Growth</h3>
-                        <div class="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full text-slate-500">LAST 7 DAYS</div>
-                    </div>
-                    <div class="h-[350px]">
-                        <canvas id="growthChart"></canvas>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-2xl font-extrabold mb-6 flex items-center">
-                        <span class="mr-3">🏆</span> Best Performing Work
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <?php if(empty($top_photos)): ?>
-                            <div class="col-span-full p-12 text-center bg-slate-100 rounded-[2rem] border-2 border-dashed border-slate-300 text-slate-400">No data found.</div>
-                        <?php else: ?>
-                            <?php foreach($top_photos as $idx => $p): ?>
-                                <div class="group relative bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
-                                    <img src="../<?php echo htmlspecialchars($p['photo_path']); ?>" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-700">
-                                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
-                                        <span class="text-rose-500"><?php echo $p['likes']; ?></span>
-                                        <svg class="w-3 h-3 text-rose-500 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                    </div>
-                                    <div class="p-6">
-                                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Rank #<?php echo $idx+1; ?></p>
-                                        <h4 class="font-bold text-slate-800 mt-1">Portfolio Shot</h4>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
+        <div class="stat-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:#2a1010;display:flex;align-items:center;justify-content:center;font-size:18px;">❤️</div>
             </div>
-
-            <div class="space-y-6">
-                <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/20 blur-3xl rounded-full"></div>
-                    <h3 class="text-lg font-bold mb-4">Quick Insights</h3>
-                    <ul class="space-y-4">
-                        <li class="flex items-start gap-3">
-                            <span class="p-1 bg-emerald-500 rounded-full mt-1"></span>
-                            <p class="text-sm text-slate-300">Your engagement is up <strong>14%</strong> compared to last week.</p>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="p-1 bg-indigo-500 rounded-full mt-1"></span>
-                            <p class="text-sm text-slate-300">The best time for you to post is <strong>7:00 PM</strong>.</p>
-                        </li>
-                    </ul>
-                    <button class="w-full mt-8 py-3 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-indigo-50 transition-colors">Generate Full PDF</button>
-                </div>
-
-                <div class="bg-indigo-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-100">
-                    <h3 class="text-lg font-bold mb-2">Pro Tip 💡</h3>
-                    <p class="text-sm text-indigo-100 leading-relaxed">Photos with high-contrast lighting received 40% more comments this week. Try uploading more low-key photography!</p>
-                </div>
-            </div>
+            <div style="font-size:28px; font-weight:700; color:#fff;"><?php echo number_format($total_likes); ?></div>
+            <div style="font-size:12px; color:#6b6b8a;">Total Likes</div>
         </div>
-    </main>
 
-    <script>
-        // Chart Initialization
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
-        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        <div class="stat-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:#0f1e35;display:flex;align-items:center;justify-content:center;font-size:18px;">💬</div>
+            </div>
+            <div style="font-size:28px; font-weight:700; color:#fff;"><?php echo number_format($total_comments); ?></div>
+            <div style="font-size:12px; color:#6b6b8a;">Total Comments</div>
+        </div>
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [<?php echo implode(',', $chart_labels); ?>],
-                datasets: [{
-                    label: 'Likes',
-                    data: [<?php echo implode(',', $chart_values); ?>],
-                    borderColor: '#6366F1',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#6366F1',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: gradient
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#e2e8f0' }, border: { display: false } },
-                    x: { grid: { display: false }, border: { display: false } }
-                }
-            }
-        });
-    </script>
+        <div class="stat-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:#0f2a1a;display:flex;align-items:center;justify-content:center;font-size:18px;">👥</div>
+                <span style="font-size:18px; font-weight:700; color:#a855f7;"><?php echo $my_rank; ?></span>
+            </div>
+            <div style="font-size:28px; font-weight:700; color:#fff;"><?php echo number_format($followers); ?></div>
+            <div style="font-size:12px; color:#6b6b8a;">Followers</div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px;">
+        <div class="cap-card">
+            <h3 style="font-size:14px; font-weight:600; color:#fff; margin-bottom:18px;">📸 Uploads</h3>
+            <canvas id="uploadsChart" height="180"></canvas>
+        </div>
+        <div class="cap-card">
+            <h3 style="font-size:14px; font-weight:600; color:#fff; margin-bottom:18px;">❤️ Likes</h3>
+            <canvas id="likesChart" height="180"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script>
+Chart.defaults.color = '#6b6b8a';
+Chart.defaults.borderColor = '#2a2a3e';
+
+// Uploads Chart
+new Chart(document.getElementById('uploadsChart'), {
+    type: 'bar',
+    data: {
+        labels: <?php echo json_encode($chart_labels ?: ['No Data']); ?>,
+        datasets: [{
+            label: 'Uploads',
+            data: <?php echo json_encode($chart_data ?: [0]); ?>,
+            backgroundColor: 'rgba(124,58,237,0.6)',
+            borderRadius: 6,
+        }]
+    }
+});
+
+// Likes Chart
+new Chart(document.getElementById('likesChart'), {
+    type: 'line',
+    data: {
+        labels: <?php echo json_encode($likes_labels ?: ['No Data']); ?>,
+        datasets: [{
+            label: 'Likes',
+            data: <?php echo json_encode($likes_data ?: [0]); ?>,
+            borderColor: '#a855f7',
+            fill: true,
+            tension: 0.4
+        }]
+    }
+});
+</script>
 </body>
 </html>
