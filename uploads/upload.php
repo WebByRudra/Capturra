@@ -2,7 +2,9 @@
 session_start();
 require_once "../config/database.php";
 
-/* CHECK LOGIN */
+/* =========================
+   CHECK LOGIN
+========================= */
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../public/login.php");
     exit();
@@ -10,39 +12,50 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-/* CHECK FILE */
+/* =========================
+   CHECK FILE INPUT
+========================= */
 if (!isset($_FILES["photo"]) || $_FILES["photo"]["error"] !== 0) {
     $_SESSION['error'] = "No file selected.";
     header("Location: ../public/photographer_home.php");
     exit();
 }
 
-/* ABSOLUTE PATH */
+/* =========================
+   UPLOAD DIRECTORY
+========================= */
 $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Capturra/uploads/";
 
-/* CREATE FOLDER */
+/* CREATE FOLDER IF NOT EXISTS */
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-/* FILE INFO */
+/* =========================
+   FILE DETAILS
+========================= */
 $fileTmp  = $_FILES["photo"]["tmp_name"];
 $fileSize = $_FILES["photo"]["size"];
 $fileName = $_FILES["photo"]["name"];
 
 $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-/* ALLOWED TYPES */
-$allowed = ["jpg", "jpeg", "png", "webp"];
-if (!in_array($fileExt, $allowed)) {
-    $_SESSION['error'] = "Only JPG, PNG, WEBP allowed.";
+/* =========================
+   VALIDATION
+========================= */
+
+/* Allowed extensions */
+$allowedExt = ["jpg", "jpeg", "png", "webp"];
+if (!in_array($fileExt, $allowedExt)) {
+    $_SESSION['error'] = "Only JPG, JPEG, PNG, WEBP allowed.";
     header("Location: ../public/photographer_home.php");
     exit();
 }
 
-/* MIME CHECK */
+/* MIME type check */
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
-$mime = finfo_file($finfo, $fileTmp);
+$mime  = finfo_file($finfo, $fileTmp);
+finfo_close($finfo);
 
 $validMimeTypes = ["image/jpeg", "image/png", "image/webp"];
 if (!in_array($mime, $validMimeTypes)) {
@@ -51,27 +64,33 @@ if (!in_array($mime, $validMimeTypes)) {
     exit();
 }
 
-/* SIZE CHECK */
+/* File size check (5MB max) */
 if ($fileSize > 5 * 1024 * 1024) {
-    $_SESSION['error'] = "File too large. Max 5MB.";
+    $_SESSION['error'] = "File too large. Max 5MB allowed.";
     header("Location: ../public/photographer_home.php");
     exit();
 }
 
-/* UNIQUE FILE NAME */
-$uniqueName = uniqid() . "_" . time() . "." . $fileExt;
+/* =========================
+   GENERATE UNIQUE NAME
+========================= */
+$uniqueName = uniqid("IMG_", true) . "." . $fileExt;
 $targetPath = $uploadDir . $uniqueName;
 
-/* MOVE FILE */
+/* =========================
+   MOVE FILE
+========================= */
 if (move_uploaded_file($fileTmp, $targetPath)) {
 
-    /* SAVE PATH IN DB */
-    $dbPath = "uploads/" . $uniqueName;
+    /* SAVE ONLY FILE NAME (IMPORTANT FIX) */
+    $dbPath = $uniqueName;
 
-    $stmt = $conn->prepare("INSERT INTO photos (user_id, image) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO photos (user_id, photo_path) VALUES (?, ?)");
 
     if (!$stmt) {
-        die("Prepare failed: " . $conn->error);
+        $_SESSION['error'] = "Prepare failed: " . $conn->error;
+        header("Location: ../public/photographer_home.php");
+        exit();
     }
 
     $stmt->bind_param("is", $user_id, $dbPath);
@@ -85,10 +104,12 @@ if (move_uploaded_file($fileTmp, $targetPath)) {
     $stmt->close();
 
 } else {
-    $_SESSION['error'] = "Upload failed.";
+    $_SESSION['error'] = "Upload failed. Try again.";
 }
 
-/* REDIRECT */
+/* =========================
+   REDIRECT BACK
+========================= */
 header("Location: ../public/photographer_home.php");
 exit();
 ?>

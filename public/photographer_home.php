@@ -356,7 +356,7 @@ document.addEventListener('click', function(event) {
              <div class="bg-white p-6 rounded-xl shadow-md">
     <h3 class="font-semibold mb-4">Quick Upload</h3>
 
-    <form action="../actions/upload_photo.php" method="POST" enctype="multipart/form-data">
+    <form action="../upload/upload.php" method="POST" enctype="multipart/form-data">
 
     <input type="file" name="photo" required
            class="block w-full text-sm mb-4">
@@ -464,7 +464,6 @@ document.addEventListener('click', function(event) {
 
 <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
-    <!-- Image -->
    <!-- Image -->
    <img src="/Capturra/uploads/<?php echo htmlspecialchars($row['photo_path']); ?>" 
      class="w-full rounded-t-xl cursor-pointer"
