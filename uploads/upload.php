@@ -2,23 +2,25 @@
 session_start();
 require_once "../config/database.php";
 
+/* CHECK LOGIN */
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../public/login.php");
     exit();
 }
 
+$user_id = $_SESSION['user_id'];
+
+/* CHECK FILE */
 if (!isset($_FILES["photo"]) || $_FILES["photo"]["error"] !== 0) {
     $_SESSION['error'] = "No file selected.";
     header("Location: ../public/photographer_home.php");
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
-
-/* ABSOLUTE PATH FIX */
+/* ABSOLUTE PATH */
 $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/Capturra/uploads/";
 
-/* CREATE FOLDER IF NOT EXISTS */
+/* CREATE FOLDER */
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
@@ -30,16 +32,15 @@ $fileName = $_FILES["photo"]["name"];
 
 $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-/* ALLOWED EXTENSIONS */
+/* ALLOWED TYPES */
 $allowed = ["jpg", "jpeg", "png", "webp"];
-
 if (!in_array($fileExt, $allowed)) {
     $_SESSION['error'] = "Only JPG, PNG, WEBP allowed.";
     header("Location: ../public/photographer_home.php");
     exit();
 }
 
-/* MIME TYPE CHECK */
+/* MIME CHECK */
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
 $mime = finfo_file($finfo, $fileTmp);
 
@@ -57,18 +58,18 @@ if ($fileSize > 5 * 1024 * 1024) {
     exit();
 }
 
-/* UNIQUE NAME */
+/* UNIQUE FILE NAME */
 $uniqueName = uniqid() . "_" . time() . "." . $fileExt;
-
 $targetPath = $uploadDir . $uniqueName;
 
 /* MOVE FILE */
 if (move_uploaded_file($fileTmp, $targetPath)) {
 
-    /* DB PATH (IMPORTANT) */
+    /* SAVE PATH IN DB */
     $dbPath = "uploads/" . $uniqueName;
 
-    $stmt = $conn->prepare("INSERT INTO photos (user_id, photo_path) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO photos (user_id, image) VALUES (?, ?)");
+
     if (!$stmt) {
         die("Prepare failed: " . $conn->error);
     }
@@ -78,12 +79,16 @@ if (move_uploaded_file($fileTmp, $targetPath)) {
     if ($stmt->execute()) {
         $_SESSION['success'] = "Photo uploaded successfully!";
     } else {
-        $_SESSION['error'] = "Database error.";
+        $_SESSION['error'] = "Database error: " . $stmt->error;
     }
+
+    $stmt->close();
 
 } else {
     $_SESSION['error'] = "Upload failed.";
 }
 
+/* REDIRECT */
 header("Location: ../public/photographer_home.php");
 exit();
+?>

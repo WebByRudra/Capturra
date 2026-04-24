@@ -433,10 +433,10 @@ document.addEventListener('click', function(event) {
 <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
     <!-- Image -->
-    <img src="/Capturra/uploads/<?php echo $row['photo_path']; ?>" 
-         class="w-full rounded-t-xl cursor-pointer"
-         style="max-height:300px; object-fit:contain;"
-         onclick="openModal(this.src)">
+   <img src="/Capturra/<?php echo htmlspecialchars($row['image']); ?>" 
+     class="w-full rounded-t-xl cursor-pointer"
+     style="max-height:300px; object-fit:contain;"
+     onclick="openModal(this.src)">
 
     <!-- Like Button -->
     <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
@@ -692,67 +692,7 @@ document.addEventListener('click', function(event) {
 
 </div>
   
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center mr-3">
-                            <span class="text-white font-bold text-lg">📸</span>
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold text-gray-900">Capturra</span>
-                            <p class="text-sm text-gray-500">Where Creators Shine</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-4">Empowering photographers to showcase their talent, connect with clients, and grow their creative business.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-purple-500 transition-colors">
-                            <span class="sr-only">Instagram</span>
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.004 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244c-.875.807-2.026 1.297-3.323 1.297z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-purple-500 transition-colors">
-                            <span class="sr-only">YouTube</span>
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-purple-500 transition-colors">
-                            <span class="sr-only">Twitter</span>
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Company</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">About Capturra</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Terms</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Help Center</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">For Photographers</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Creator Program</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Growth Tips</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Analytics</a></li>
-                        <li><a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">Resources</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="mt-8 pt-8 border-t border-gray-200">
-                <p class="text-center text-gray-500 text-sm">© 2024 Capturra. All rights reserved. Where Creators Shine ✨</p>
-            </div>
-        </div>
-    </footer>
+
 
     <script>
         // Navigation functions

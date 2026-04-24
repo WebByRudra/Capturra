@@ -331,9 +331,11 @@ document.addEventListener('click', function(event) {
         
         <!-- CLICKABLE IMAGE -->
         <a href="photo.php?id=<?php echo $row['id']; ?>">
-            <img src="/Capturra/uploads/<?php echo basename(trim($row['photo_path'])); ?>"
-     class="w-full"
-     style="max-height:300px; object-fit:contain;">
+             <img src="/Capturra/<?php echo htmlspecialchars($row['image']); ?>" 
+     class="w-full rounded-t-xl cursor-pointer"
+     style="max-height:300px; object-fit:contain;"
+     onclick="openModal(this.src)">
+
     </a>
         <div class="p-4">
             
