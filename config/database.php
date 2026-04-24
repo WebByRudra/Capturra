@@ -1,16 +1,17 @@
 <?php
-// Database configuration for localhost:8888 (XAMPP)
-// Adjust these values if needed
-$host = 'localhost';
-$user = 'root';
-$password = ''; // Empty by default in XAMPP
-$dbname = 'capturra'; // Change if your DB name is different
-$port = 3306;
 
-$conn = mysqli_connect($host, $user, $password, $dbname, $port);
+$host = "127.0.0.1";   // 🔥 localhost ki jagah ye use karo
+$user = "root";
+$pass = "";
+$db   = "capturra";
+$port = 3306;          // agar MySQL port change hai toh yaha update karo
+
+$conn = mysqli_connect($host, $user, $pass, $db, $port);
 
 if (!$conn) {
-    die(json_encode(['error' => 'Database connection failed: ' . mysqli_connect_error()]));
+    die(json_encode([
+        "error" => "Database connection failed: " . mysqli_connect_error()
+    ]));
 }
 
-mysqli_set_charset($conn, 'utf8mb4');
+?>
