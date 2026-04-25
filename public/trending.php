@@ -211,8 +211,6 @@ No trending data available
 </div>
 
 </div>
-
-=======
     <section style="background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0f0f13 60%); padding:40px 24px 30px; text-align:center;">
         <h1 class="text-3xl font-bold text-white mb-2">🔥 Trending on Capturra</h1>
         <p class="text-gray-400 text-sm mb-8">Most liked photos and top creators</p>
