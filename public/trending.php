@@ -51,11 +51,7 @@ $result = mysqli_query($conn, $sql);
 if(!$result){
     die("Query Failed: " . mysqli_error($conn));
 }
-=======
-/* NOTE: We keep the DB connection open for the initial page load, 
-  but the actual data fetching for trending is now handled via AJAX 
-  to prevent the PHP "Undefined Variable" errors.
-*/
+
 ?>
 
 <!DOCTYPE html>
@@ -138,77 +134,14 @@ body{
         
         .filter-btn { padding:8px 16px; border-radius:20px; border:1px solid #2a2a3e; background:#16161f; color:#a0a0c0; cursor:pointer; transition:0.3s; }
         .filter-btn.active { background:linear-gradient(135deg,#7c3aed,#5b21b6); color:white; border-color:#7c3aed; }
+        .filter-btn.active {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6) !important;
+    color: white !important;
+    border-color: #7c3aed !important;
+}
     </style>
 </head>
 <body>
-
-<div class="max-w-6xl mx-auto p-6">
-
-<!-- HEADER -->
-<h1 class="text-3xl font-bold mb-6 text-center">
-🔥 Trending
-</h1>
-
-<!-- FILTER -->
-<div class="flex gap-3 justify-center mb-8">
-
-<a href="?filter=today" class="filter-btn <?php if($filter=='today') echo 'active'; ?>">Today</a>
-
-<a href="?filter=week" class="filter-btn <?php if($filter=='week') echo 'active'; ?>">This Week</a>
-
-<a href="?filter=month" class="filter-btn <?php if($filter=='month') echo 'active'; ?>">This Month</a>
-
-<a href="?filter=all" class="filter-btn <?php if($filter=='all') echo 'active'; ?>">All</a>
-
-</div>
-
-<!-- GRID -->
-<div class="grid md:grid-cols-3 gap-6">
-
-<?php if(mysqli_num_rows($result)>0): ?>
-
-<?php while($row = mysqli_fetch_assoc($result)): ?>
-
-<div class="card">
-
-<div class="relative">
-
-<img src="<?php echo $row['image']; ?>"
-     class="w-full h-56 object-cover">
-
-<span class="badge">🔥</span>
-
-</div>
-
-<div class="p-4">
-
-<h2 class="font-semibold text-lg">
-@<?php echo $row['username']; ?>
-</h2>
-
-<div class="flex justify-between mt-3 text-sm text-gray-400">
-
-<span>❤️ <?php echo $row['like_count']; ?></span>
-
-<span>💬 <?php echo $row['comment_count']; ?></span>
-
-</div>
-
-</div>
-
-</div>
-
-<?php endwhile; ?>
-
-<?php else: ?>
-
-<p class="text-center col-span-3 text-gray-400">
-No trending data available
-</p>
-
-<?php endif; ?>
-
-</div>
 
 </div>
     <section style="background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0f0f13 60%); padding:40px 24px 30px; text-align:center;">
@@ -245,76 +178,59 @@ No trending data available
     </footer>
 
 <script>
-    function loadTrending(filter, btn) {
-        // UI Update for Buttons
-        if (btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        const container = document.getElementById('trending-container');
-        // Show loading spinner
-        container.innerHTML = `<div class="col-span-full text-center py-20"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500"></div></div>`;
-
-        // ✅ FIXED PATH: Pointing relatively from 'public' folder to 'api' folder
-        fetch('/Capturra/api/trending.php?filter=' + filter)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                return res.json();
-            })
-            .then(response => {
-                let html = "";
-
-                // ✅ Handle empty data or errors from API
-                if (!response.status || !response.data || response.data.length === 0) {
-                    container.innerHTML = `<p class="col-span-full text-center text-gray-400 py-10">No trending photos found for this period.</p>`;
-                    return;
-                }
-
-                response.data.forEach((photo, index) => {
-                    // Extract filename and handle rank
-                    const img = photo.photo_path.split(/[\\/]/).pop();
-                    const rank = index + 1;
-
-                    html += `
-                    <div class="photo-card">
-                        <div class="relative">
-                            <a href="photo.php?id=${photo.id}">
-                                <img src="../uploads/${img}" 
-                                     style="width:100%; height:220px; object-fit:cover; display:block;"
-                                     onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'">
-                            </a>
-                            <div class="absolute top-2 left-2">
-                                <span class="rank-badge rank-${rank <= 3 ? rank : 'default'} bg-black/60 backdrop-blur-md text-white">#${rank}</span>
-                            </div>
-                        </div>
-
-                        <div class="p-4">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="text-xl">❤️</span>
-                                <span class="text-xl font-bold text-white">${photo.like_count}</span>
-                                <span class="text-xs text-gray-500">likes</span>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-6 h-6 rounded-full bg-purple-900 flex items-center justify-center text-[10px]">👤</div>
-                                    <span class="text-sm font-medium">@${photo.username}</span>
-                                </div>
-                                <span class="text-xs text-gray-500">💬 ${photo.comment_count}</span>
-                            </div>
-                        </div>
-                    </div>`;
-                });
-
-                container.innerHTML = html;
-            })
-            .catch(err => {
-                console.error("Fetch Error:", err);
-                container.innerHTML = `<p class="col-span-full text-center text-red-400 py-10">Error: API unreachable. Check Console (F12) for details.</p>`;
-            });
+   function loadTrending(filter, btn) {
+    // 1. UI Update: Handle the highlighting for whichever button was clicked
+    if (btn) {
+        // Find the parent container of the clicked button and remove 'active' from all its buttons
+        const parent = btn.parentElement;
+        parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        
+        // Add 'active' to the clicked button
+        btn.classList.add('active');
     }
 
+    const container = document.getElementById('trending-container');
+    container.innerHTML = `<div class="col-span-full text-center py-20"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500"></div></div>`;
+
+    // 2. Data Fetching (Keep your working absolute path)
+    fetch('/Capturra/api/trending.php?filter=' + filter)
+        .then(res => res.json())
+        .then(response => {
+            let html = "";
+            if (!response.status || !response.data || response.data.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-gray-400 py-10">No trending photos found for this period.</p>`;
+                return;
+            }
+
+            response.data.forEach((photo, index) => {
+                const img = photo.photo_path.split(/[\\/]/).pop();
+                const rank = index + 1;
+                html += `
+                <div class="photo-card">
+                    <div class="relative">
+                        <img src="../uploads/${img}" class="w-full h-56 object-cover block">
+                        <div class="absolute top-2 left-2">
+                            <span class="rank-badge rank-${rank <= 3 ? rank : 'default'} bg-black/60 backdrop-blur-md text-white">#${rank}</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-xl font-bold text-white">❤️ ${photo.like_count}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium">@${photo.username}</span>
+                            <span class="text-xs text-gray-500">💬 ${photo.comment_count}</span>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        })
+        .catch(err => {
+            container.innerHTML = `<p class="col-span-full text-center text-red-400 py-10">Error: API unreachable or broken.</p>`;
+        });
+}
+    
     function showTab(tab, btn) {
         document.getElementById('tab-photos').style.display = tab === 'photos' ? 'block' : 'none';
         document.getElementById('tab-photographers').style.display = tab === 'photographers' ? 'block' : 'none';
@@ -322,12 +238,15 @@ No trending data available
         btn.classList.add('active');
     }
 
-    // Initial Load
-    window.onload = () => {
-        const defaultBtn = document.querySelector('.filter-btn.active');
-        // Initial load for 'week'
-        loadTrending('week', defaultBtn);
-    };
+    // Initial Load: Set to 'today' or 'week' based on your preferred default
+    // Initial Load: Set the default view to 'today'
+window.onload = () => {
+    // Find the 'Today' button specifically to ensure it gets the 'active' class
+    const todayBtn = document.querySelector('button[onclick*="today"]');
+    
+    // Trigger the load function for today's data
+    loadTrending('today', todayBtn);
+};
 </script>
 </body>
 </html>

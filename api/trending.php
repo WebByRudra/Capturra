@@ -25,28 +25,34 @@ $hasComments = mysqli_num_rows($checkComments) > 0;
 $comments_join = $hasComments ? "LEFT JOIN comments ON comments.photo_id = photos.id" : "";
 $comment_count = $hasComments ? "COUNT(DISTINCT comments.id)" : "0";
 
-$sql = "
-SELECT photos.*, users.username,
-COUNT(DISTINCT likes.id) AS like_count,
-$comment_count AS comment_count
 
+/* 🔥 UPDATED MAIN QUERY */
+$sql = "
+SELECT 
+    photos.id,
+    photos.photo_path,  -- Ensure this matches your JS (photo.photo_path)
+    photos.upload_date,
+    users.username,
+    COUNT(DISTINCT likes.id) AS like_count,
+    $comment_count AS comment_count
 FROM photos
 JOIN users ON photos.user_id = users.id
 LEFT JOIN likes ON likes.photo_id = photos.id
 $comments_join
-
 WHERE $time_condition
 GROUP BY photos.id
 ORDER BY like_count DESC
-LIMIT 6
+LIMIT 12
 ";
 
 $result = mysqli_query($conn, $sql);
 
 $data = [];
-
 while($row = mysqli_fetch_assoc($result)){
     $data[] = $row;
 }
 
-echo json_encode($data);
+echo json_encode([
+    "status" => true,
+    "data" => $data
+]);
