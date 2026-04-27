@@ -178,48 +178,66 @@ body{
     </footer>
 
 <script>
-   function loadTrending(filter, btn) {
-    // 1. UI Update: Handle the highlighting for whichever button was clicked
+let currentFilter = 'today';
+
+function loadTrending(filter, btn) {
+    currentFilter = filter;
+    
+    // UI: Update active state for buttons
     if (btn) {
-        // Find the parent container of the clicked button and remove 'active' from all its buttons
+        // Targets buttons only within the trending filter group
         const parent = btn.parentElement;
         parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        
-        // Add 'active' to the clicked button
         btn.classList.add('active');
     }
 
     const container = document.getElementById('trending-container');
-    container.innerHTML = `<div class="col-span-full text-center py-20"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500"></div></div>`;
+    container.innerHTML = `
+        <div class="col-span-full text-center py-20">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500"></div>
+        </div>`;
 
-    // 2. Data Fetching (Keep your working absolute path)
-    fetch('/Capturra/api/trending.php?filter=' + filter)
-        .then(res => res.json())
+    // Path adjusted to look in the sibling 'api' folder
+    fetch('../api/trending.php?filter=' + filter)
+        .then(res => {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+        })
         .then(response => {
-            let html = "";
             if (!response.status || !response.data || response.data.length === 0) {
                 container.innerHTML = `<p class="col-span-full text-center text-gray-400 py-10">No trending photos found for this period.</p>`;
                 return;
             }
 
+            let html = "";
             response.data.forEach((photo, index) => {
-                const img = photo.photo_path.split(/[\\/]/).pop();
+                // Handle image path correctly
+                const imgName = photo.photo_path.split(/[\\/]/).pop();
                 const rank = index + 1;
+                
                 html += `
-                <div class="photo-card">
+                <div class="photo-card animate-fadeIn">
                     <div class="relative">
-                        <img src="../uploads/${img}" class="w-full h-56 object-cover block">
+                        <a href="photo.php?id=${photo.id}">
+                            <img src="../uploads/${imgName}" class="w-full h-56 object-cover block rounded-t-xl">
+                        </a>
                         <div class="absolute top-2 left-2">
-                            <span class="rank-badge rank-${rank <= 3 ? rank : 'default'} bg-black/60 backdrop-blur-md text-white">#${rank}</span>
+                            <span class="rank-badge ${rank <= 3 ? 'rank-' + rank : 'bg-black/60'} backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ${rank <= 3 ? '🔥 #' + rank : '#' + rank}
+                            </span>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="text-xl font-bold text-white">❤️ ${photo.like_count}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm font-medium">@${photo.username}</span>
-                            <span class="text-xs text-gray-500">💬 ${photo.comment_count}</span>
+                    <div class="p-4 bg-[#16161d] rounded-b-xl border-t border-gray-800">
+                        <h2 class="font-semibold text-white truncate">@${photo.username}</h2>
+                        <div class="flex justify-between items-center mt-3">
+                            <div class="flex items-center gap-1">
+                                <span class="text-red-500">❤️</span>
+                                <span class="font-bold text-white">${photo.like_count}</span>
+                            </div>
+                            <div class="flex items-center gap-1 text-gray-400 text-xs">
+                                <span>💬</span>
+                                <span>${photo.comment_count}</span>
+                            </div>
                         </div>
                     </div>
                 </div>`;
@@ -227,25 +245,37 @@ body{
             container.innerHTML = html;
         })
         .catch(err => {
-            container.innerHTML = `<p class="col-span-full text-center text-red-400 py-10">Error: API unreachable or broken.</p>`;
+            console.error("Fetch error:", err);
+            container.innerHTML = `<p class="col-span-full text-center text-red-400 py-10">Error: Unable to load data. Check console.</p>`;
         });
 }
+
+function showTab(tab, btn) {
+    const photoTab = document.getElementById('tab-photos');
+    const userTab = document.getElementById('tab-photographers');
     
-    function showTab(tab, btn) {
-        document.getElementById('tab-photos').style.display = tab === 'photos' ? 'block' : 'none';
-        document.getElementById('tab-photographers').style.display = tab === 'photographers' ? 'block' : 'none';
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    if (tab === 'photos') {
+        photoTab.style.display = 'block';
+        userTab.style.display = 'none';
+        loadTrending(currentFilter);
+    } else {
+        photoTab.style.display = 'none';
+        userTab.style.display = 'block';
     }
 
-    // Initial Load: Set to 'today' or 'week' based on your preferred default
-    // Initial Load: Set the default view to 'today'
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+// Ensure the page starts with 'Today' selected and loaded
 window.onload = () => {
-    // Find the 'Today' button specifically to ensure it gets the 'active' class
     const todayBtn = document.querySelector('button[onclick*="today"]');
-    
-    // Trigger the load function for today's data
-    loadTrending('today', todayBtn);
+    if(todayBtn) {
+        loadTrending('today', todayBtn);
+    } else {
+        // Fallback if button isn't found
+        loadTrending('today');
+    }
 };
 </script>
 </body>
