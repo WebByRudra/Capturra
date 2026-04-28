@@ -381,7 +381,7 @@ document.addEventListener('click', function(event) {
                             <button onclick="editProfile()" class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors font-medium">
                                 Edit Profile
                             </button>
-                            <button onclick="addServices()" class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                            <button onclick="addServices()" class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-black-200 transition-colors font-medium ">
                                 Add Services
                             </button>
                         </div>
@@ -411,18 +411,22 @@ document.addEventListener('click', function(event) {
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">💡 Growth Tips</h3>
                     <div class="space-y-3">
-                        <div class="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-purple-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">5 Tips to Improve Lighting</p>
-                            <p class="text-xs text-gray-600">Master natural light techniques</p>
-                        </div>
-                        <div class="p-3 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-teal-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Boost Your Portfolio Views</p>
-                            <p class="text-xs text-gray-600">SEO tips for photographers</p>
-                        </div>
-                        <div class="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg cursor-pointer hover:from-yellow-100 hover:to-orange-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Client Communication</p>
-                            <p class="text-xs text-gray-600">Build lasting relationships</p>
-                        </div>
+                        <div class="space-y-3">
+    <div class="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-purple-100 transition-colors border border-blue-100/50">
+        <p class="text-sm font-bold text-black">5 Tips to Improve Lighting</p>
+        <p class="text-xs font-medium text-gray-900 ">Master natural light techniques</p>
+    </div>
+
+    <div class="p-3 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-teal-100 transition-colors border border-green-100/50">
+        <p class="text-sm font-bold text-black">Boost Your Portfolio Views</p>
+        <p class="text-xs font-medium text-gray-900 opacity-80">SEO tips for photographers</p>
+    </div>
+
+    <div class="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg cursor-pointer hover:from-yellow-100 hover:to-orange-100 transition-colors border border-yellow-100/50">
+        <p class="text-sm font-bold text-black">Client Communication</p>
+        <p class="text-xs font-medium text-gray-900 opacity-80">Build lasting relationships</p>
+    </div>
+</div>
                     </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
