@@ -653,28 +653,34 @@ document.addEventListener('click', function(event) {
 </div>
 
                 <!-- Recommended Creators -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">💡 Recommended Creators</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Emma Wilson</p>
-                                <p class="text-xs text-gray-500">Portrait specialist</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">David Park</p>
-                                <p class="text-xs text-gray-500">Nature photographer</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                    </div>
-                </div>
+               <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-900">💡 Recommended Creators</h3>
+        <a href="search.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+            View More <span>→</span>
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Emma Wilson</p>
+                <p class="text-xs text-gray-500">Portrait specialist</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">David Park</p>
+                <p class="text-xs text-gray-500">Nature photographer</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Suggested Hashtags -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -957,6 +963,73 @@ document.addEventListener('click', function(e) {
     const menu = document.getElementById('notificationMenu');
     if (!menu.contains(e.target)) {
         menu.classList.add('hidden');
+    }
+});
+// Search Bar logic
+const searchInput = document.querySelector('input[type="text"]'); // Apna search input select karein
+const resultsDiv = document.createElement('div');
+resultsDiv.className = "absolute top-full left-0 w-full bg-[#16161f] border border-[#2a2a3e] rounded-xl mt-2 hidden z-50 overflow-hidden shadow-2xl";
+searchInput.parentElement.appendChild(resultsDiv);
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value.trim();
+    if (query.length < 1) {
+        resultsDiv.classList.add('hidden');
+        return;
+    }
+
+    try {
+        const response = await fetch(`search.php?q=${query}`);
+        const data = await response.json();
+
+        let html = '';
+
+        // Users Section
+        if (data.users.length > 0) {
+            html += '<div class="p-2 text-[10px] text-slate-500 uppercase tracking-widest font-bold">Creators</div>';
+            data.users.forEach(user => {
+                html += `
+                    <a href="profile.php?username=${user.username}" class="flex items-center gap-3 p-3 hover:bg-[#1e1e2e] transition-colors border-b border-[#1e1e2e]">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">👤</div>
+                        <div>
+                            <p class="text-sm text-white font-medium">${user.name}</p>
+                            <p class="text-[10px] text-slate-500">@${user.username}</p>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        // Photos Section
+        if (data.photos.length > 0) {
+            html += '<div class="p-2 text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-2">Photos</div>';
+            data.photos.forEach(photo => {
+                html += `
+                    <a href="photo_detail.php?id=${photo.id}" class="flex items-center gap-3 p-3 hover:bg-[#1e1e2e] transition-colors">
+                        <img src="${photo.image_path}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='/Capturra/assets/placeholder.jpg'">
+                        <div>
+                            <p class="text-sm text-white font-medium line-clamp-1">${photo.title}</p>
+                            <p class="text-[10px] text-slate-500">by @${photo.username}</p>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        if (data.users.length === 0 && data.photos.length === 0) {
+            html = '<div class="p-4 text-center text-xs text-slate-500">No results found for "' + query + '"</div>';
+        }
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.classList.remove('hidden');
+
+    } catch (error) {
+        console.error("Search error:", error);
+    }
+});
+
+// Bahar click karne par hide karein
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+        resultsDiv.classList.add('hidden');
     }
 });
 </script>

@@ -283,6 +283,29 @@ $result = mysqli_query($conn, $sql);
                         </a>
                     </div>
                 </div>
+                <div class="mt-10 px-4">
+    <div class="relative overflow-hidden bg-gradient-to-br from-[#6366f1] via-[#a855f7] to-[#ec4899] rounded-2xl p-5 shadow-lg shadow-purple-500/20 group cursor-pointer transition-transform hover:scale-[1.02]">
+        <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-colors"></div>
+        
+        <div class="relative z-10">
+            <div class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center mb-3 text-white">
+                📸
+            </div>
+            
+            <h4 class="text-white font-bold text-sm leading-tight mb-1">
+                Want to sell your photos?
+            </h4>
+            <p class="text-purple-100 text-[10px] mb-4 opacity-90">
+                Join our community as a Creator and start earning today!
+            </p>
+            
+            <a href="photographer_register.php" class="block w-full bg-white text-center text-[#a855f7] text-[11px] font-bold py-2.5 rounded-xl hover:bg-gray-100 transition-colors shadow-sm">
+                Switch to Creator Mode
+            </a>
+        </div>
+    </div>
+    
+</div>
             </div>
 
             <!-- Main Content -->
@@ -333,32 +356,7 @@ $result = mysqli_query($conn, $sql);
                     </section>
 
                     <!-- Followed Creators' Updates -->
-                    <section>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">👥 Following Updates</h2>
-                        <div class="space-y-4">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <div class="flex items-center space-x-3 mb-4">
-                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Emma" class="w-10 h-10 rounded-full">
-                                    <div>
-                                        <p class="font-semibold text-gray-900">Emma Wilson</p>
-                                        <p class="text-sm text-gray-500">2 hours ago</p>
-                                    </div>
-                                </div>
-                                <p class="text-gray-700 mb-4">Just finished an amazing portrait session! Can't wait to share the results 📸</p>
-                                <div class="flex items-center space-x-4">
-                                    <button onclick="likePost(this)" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition-colors">
-                                        <span>❤️</span><span class="text-sm">42</span>
-                                    </button>
-                                    <button onclick="commentPost()" class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors">
-                                        <span>💬</span><span class="text-sm">8</span>
-                                    </button>
-                                    <button onclick="sharePost()" class="flex items-center space-x-1 text-gray-500 hover:text-green-500 transition-colors">
-                                        <span>↗️</span><span class="text-sm">3</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                  
                 </div>
             </div>
 
@@ -407,27 +405,34 @@ $result = mysqli_query($conn, $sql);
 </div>
 
                 <!-- Suggested Creators -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">💡 Suggested for You</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" alt="Suggested creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Emma Wilson</p>
-                                <p class="text-xs text-gray-500">Portrait specialist</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Suggested creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">David Park</p>
-                                <p class="text-xs text-gray-500">Nature photographer</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                    </div>
-                </div>
+               <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-900">💡 Suggested for You</h3>
+        <a href="trending.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+              <span>→</span>
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" alt="Suggested creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Emma Wilson</p>
+                <p class="text-xs text-gray-500">Portrait specialist</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Suggested creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">David Park</p>
+                <p class="text-xs text-gray-500">Nature photographer</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Trending Hashtags -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -618,6 +623,73 @@ $result = mysqli_query($conn, $sql);
             }
         });
     }
+    // Search Bar logic
+const searchInput = document.querySelector('input[type="text"]'); // Apna search input select karein
+const resultsDiv = document.createElement('div');
+resultsDiv.className = "absolute top-full left-0 w-full bg-[#16161f] border border-[#2a2a3e] rounded-xl mt-2 hidden z-50 overflow-hidden shadow-2xl";
+searchInput.parentElement.appendChild(resultsDiv);
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value.trim();
+    if (query.length < 1) {
+        resultsDiv.classList.add('hidden');
+        return;
+    }
+
+    try {
+        const response = await fetch(`search.php?q=${query}`);
+        const data = await response.json();
+
+        let html = '';
+
+        // Users Section
+        if (data.users.length > 0) {
+            html += '<div class="p-2 text-[10px] text-slate-500 uppercase tracking-widest font-bold">Creators</div>';
+            data.users.forEach(user => {
+                html += `
+                    <a href="profile.php?username=${user.username}" class="flex items-center gap-3 p-3 hover:bg-[#1e1e2e] transition-colors border-b border-[#1e1e2e]">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">👤</div>
+                        <div>
+                            <p class="text-sm text-white font-medium">${user.name}</p>
+                            <p class="text-[10px] text-slate-500">@${user.username}</p>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        // Photos Section
+        if (data.photos.length > 0) {
+            html += '<div class="p-2 text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-2">Photos</div>';
+            data.photos.forEach(photo => {
+                html += `
+                    <a href="photo_detail.php?id=${photo.id}" class="flex items-center gap-3 p-3 hover:bg-[#1e1e2e] transition-colors">
+                        <img src="${photo.image_path}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='/Capturra/assets/placeholder.jpg'">
+                        <div>
+                            <p class="text-sm text-white font-medium line-clamp-1">${photo.title}</p>
+                            <p class="text-[10px] text-slate-500">by @${photo.username}</p>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        if (data.users.length === 0 && data.photos.length === 0) {
+            html = '<div class="p-4 text-center text-xs text-slate-500">No results found for "' + query + '"</div>';
+        }
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.classList.remove('hidden');
+
+    } catch (error) {
+        console.error("Search error:", error);
+    }
+});
+
+// Bahar click karne par hide karein
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+        resultsDiv.classList.add('hidden');
+    }
+});
     </script>
 </body>
 </html>
