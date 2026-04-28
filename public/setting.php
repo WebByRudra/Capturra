@@ -1,6 +1,34 @@
 <?php
-// settings.php - include in your main layout or use standalone
-?>
+include("../config/database.php");
+session_start();
+
+// ✅ Check login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+// ✅ Prepare query
+$sql = "SELECT * FROM users WHERE id=?";
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    die("SQL Error: " . $conn->error);
+}
+
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+// ✅ If user not found
+if (!$user) {
+    die("User not found");
+}
+?>  
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,76 +151,267 @@
             border:1px solid #3a2060; font-size:11px;
             padding:3px 10px; border-radius:20px; font-weight:600;
         }
+        .edit-btn {
+    position: absolute;
+    right: 10px;
+    top: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #a855f7;
+}
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #1e1535;
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    border: 1px solid #3a2060;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    border-color: #22c55e;
+}
+
+.toast.error {
+    border-color: #ef4444;
+}
     </style>
 </head>
 <body>
  
 <div style="max-width:1100px; margin:0 auto; padding:40px 24px 60px;">
- 
-    <!-- Page Title -->
-    <div style="margin-bottom:28px;">
-        <h1 style="font-size:28px; font-weight:700; color:#fff; margin:0 0 4px;">Settings</h1>
-        <p style="font-size:13px; color:#6b6b8a; margin:0;">Manage your account preferences and privacy</p>
+
+<!-- ✅ HEADER (PERFECT FLEX STRUCTURE) -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:12px;">
+
+    <!-- LEFT SIDE -->
+    <div>
+        <h1 style="font-size:28px; font-weight:700; color:#fff; margin:0;">Settings</h1>
+        <p style="font-size:13px; color:#6b6b8a; margin:2px 0 0;">
+            Manage your account preferences and privacy
+        </p>
     </div>
- 
-    <div style="display:grid; grid-template-columns:220px 1fr; gap:24px;">
- 
-        <!-- Sidebar -->
-        <div>
-            <!-- Profile card -->
-            <div class="s-card" style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
-                <div class="avatar-circle" style="width:48px;height:48px;font-size:16px;">AC</div>
-                <div>
-                    <div style="font-size:13px; font-weight:600; color:#fff;">Alex Chen</div>
-                    <div style="font-size:11px; color:#6b6b8a; margin-top:2px;">alex@gmail.com</div>
-                    <div style="margin-top:4px;"><span class="plan-badge">Pro</span></div>
+
+    <!-- RIGHT SIDE BUTTON -->
+    <?php
+        $dashboard = ($user['role'] === 'Photographer') 
+            ? 'photographer_home.php' 
+            : 'client_home.php';
+    ?>
+
+    <a href="<?php echo $dashboard; ?>" 
+       style="display:inline-flex; align-items:center; gap:8px; 
+              background:#1e1535; color:#a855f7; padding:10px 16px; 
+              border-radius:10px; font-size:13px; text-decoration:none;
+              transition:0.2s ease;"
+       onmouseover="this.style.background='#2a1d4d'"
+       onmouseout="this.style.background='#1e1535'">
+
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+</div>
+
+<!-- ✅ MAIN GRID -->
+<div style="display:grid; grid-template-columns:220px 1fr; gap:24px;">
+
+    <!-- SIDEBAR -->
+    <div>
+
+        <!-- PROFILE CARD -->
+        <div class="s-card" style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+            
+            <div class="avatar-circle" style="width:48px;height:48px;font-size:16px; overflow:hidden;">
+                <?php if(!empty($user['profile_image'])): ?>
+                    <img src="../uploads/profiles/<?php echo $user['profile_image']; ?>" 
+                         style="width:100%;height:100%;object-fit:cover;">
+                <?php else: ?>
+                    <?php 
+                    echo strtoupper(
+                        substr($user['first_name'] ?? 'U',0,1) . 
+                        substr($user['last_name'] ?? '',0,1)
+                    ); 
+                    ?>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <div style="font-size:13px; font-weight:600; color:#fff;">
+                    <?php echo $user['first_name'] . ' ' . $user['last_name']; ?>
+                </div>
+                <div style="font-size:11px; color:#6b6b8a; margin-top:2px;">
+                    <?php echo $user['email']; ?>
+                </div>
+                <div style="margin-top:4px;">
+                    <span class="plan-badge">Pro</span>
                 </div>
             </div>
- 
-            <div class="sidebar-nav">
-                <button class="s-nav-item active" onclick="switchTab('profile',this)"><i class="fa-solid fa-user"></i> Profile</button>
-                <button class="s-nav-item" onclick="switchTab('account',this)"><i class="fa-solid fa-shield"></i> Account & Security</button>
-                <button class="s-nav-item" onclick="switchTab('notifications',this)"><i class="fa-solid fa-bell"></i> Notifications</button>
-                <button class="s-nav-item" onclick="switchTab('privacy',this)"><i class="fa-solid fa-lock"></i> Privacy</button>
-                <button class="s-nav-item" onclick="switchTab('billing',this)"><i class="fa-solid fa-credit-card"></i> Billing</button>
-                <button class="s-nav-item" onclick="switchTab('appearance',this)"><i class="fa-solid fa-palette"></i> Appearance</button>
-            </div>
         </div>
- 
-        <!-- Content -->
-        <div>
- 
+
+        <!-- SIDEBAR NAV -->
+        <div class="sidebar-nav">
+            <button class="s-nav-item active" onclick="switchTab('profile',this)">
+                <i class="fa-solid fa-user"></i> Profile
+            </button>
+
+            <button class="s-nav-item" onclick="switchTab('account',this)">
+                <i class="fa-solid fa-shield"></i> Account & Security
+            </button>
+
+            <button class="s-nav-item" onclick="switchTab('notifications',this)">
+                <i class="fa-solid fa-bell"></i> Notifications
+            </button>
+
+            <button class="s-nav-item" onclick="switchTab('privacy',this)">
+                <i class="fa-solid fa-lock"></i> Privacy
+            </button>
+
+            <button class="s-nav-item" onclick="switchTab('billing',this)">
+                <i class="fa-solid fa-credit-card"></i> Billing
+            </button>
+
+            <button class="s-nav-item" onclick="switchTab('appearance',this)">
+                <i class="fa-solid fa-palette"></i> Appearance
+            </button>
+        </div>
+
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div>
+
             <!-- Profile -->
             <div id="tab-profile" class="tab-content active">
                 <div class="s-card">
+
                     <h3>Profile Information</h3>
                     <p class="s-desc">Update your public profile details</p>
-                    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #1e1e2e;">
-                        <div class="avatar-circle">AC</div>
-                        <div style="display:flex; gap:10px;">
-                            <button class="save-btn" style="padding:8px 16px; font-size:12px;">Change Photo</button>
-                            <button class="danger-btn" style="padding:8px 14px; font-size:12px;">Remove</button>
+
+                    <!-- ✅ IMAGE UPLOAD FORM -->
+                    <form action="upload_profile.php" method="POST" enctype="multipart/form-data">
+
+                        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #1e1e2e;">
+                            
+                            <!-- Avatar -->
+                            <div class="avatar-circle" style="overflow:hidden;">
+                                <?php if(!empty($user['profile_image'])): ?>
+                                    <img src="../uploads/profiles/<?php echo $user['profile_image']; ?>" 
+                                         style="width:100%;height:100%;object-fit:cover;">
+                                <?php else: ?>
+                                    <?php 
+                                    echo strtoupper(
+                                        substr($user['first_name'] ?? 'U',0,1) . 
+                                        substr($user['last_name'] ?? '',0,1)
+                                    ); 
+                                    ?>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Hidden File -->
+                            <input type="file" name="profile_image" id="fileInput" hidden accept="image/*">
+
+                            <div style="display:flex; gap:10px;">
+                                <button type="button" class="save-btn"
+                                        onclick="document.getElementById('fileInput').click()">
+                                    Change Photo
+                                </button>
+
+                                <a href="remove_profile.php">
+                                    <button type="button" class="danger-btn">
+                                        Remove
+                                    </button>
+                                </a>
+                            </div>
+
                         </div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                        <div><label class="s-label">First Name</label><input type="text" class="s-input" value="Alex"></div>
-                        <div><label class="s-label">Last Name</label><input type="text" class="s-input" value="Chen"></div>
-                        <div><label class="s-label">Username</label><input type="text" class="s-input" value="@alexchen"></div>
-                        <div><label class="s-label">Role</label>
-                            <select class="s-input" style="-webkit-appearance:none;">
-                                <option selected>Photographer</option>
-                                <option>Client</option>
-                            </select>
-                        </div>
-                        <div style="grid-column:span 2;"><label class="s-label">Bio</label>
-                            <textarea class="s-input" rows="3" style="resize:none;">Portrait specialist based in New York.</textarea>
-                        </div>
-                        <div><label class="s-label">Location</label><input type="text" class="s-input" value="New York, USA"></div>
-                        <div><label class="s-label">Website</label><input type="url" class="s-input" placeholder="https://yoursite.com"></div>
-                    </div>
-                    <button class="save-btn">Save Changes</button>
-                </div>
+                    </form>
+
+        <!-- FORM START -->
+        <form action="save_profile.php" method="POST">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+            <!-- FIRST NAME -->
+            <div style="position:relative;">
+                <label class="s-label">First Name</label>
+                <input type="text" name="first_name" class="s-input"
+                       value="<?php echo $user['first_name'] ?? ''; ?>" disabled>
+                <button type="button" class="edit-btn" onclick="enableEdit(this)">✏️</button>
             </div>
+
+            <!-- LAST NAME -->
+            <div style="position:relative;">
+                <label class="s-label">Last Name</label>
+                <input type="text" name="last_name" class="s-input"
+                       value="<?php echo $user['last_name'] ?? ''; ?>" disabled>
+                <button type="button" class="edit-btn" onclick="enableEdit(this)">✏️</button>
+            </div>
+
+            <!-- USERNAME -->
+            <div style="position:relative;">
+                <label class="s-label">Username</label>
+                <input type="text" name="username" class="s-input"
+                       value="<?php echo $user['username'] ?? ''; ?>" disabled>
+                <button type="button" class="edit-btn" onclick="enableEdit(this)">✏️</button>
+            </div>
+
+            <!-- ROLE (keep normal dropdown) -->
+            <div>
+                <label class="s-label">Role</label>
+                <select name="role" class="s-input" style="-webkit-appearance:none;">
+                    <option value="Photographer" <?php if(($user['role'] ?? '')=='Photographer') echo 'selected'; ?>>Photographer</option>
+                    <option value="Client" <?php if(($user['role'] ?? '')=='Client') echo 'selected'; ?>>Client</option>
+                </select>
+            </div>
+
+            <!-- BIO -->
+            <div style="grid-column:span 2; position:relative;">
+                <label class="s-label">Bio</label>
+                <textarea name="bio" class="s-input" rows="3" style="resize:none;" disabled><?php echo $user['bio'] ?? ''; ?></textarea>
+                <button type="button" class="edit-btn" onclick="enableEdit(this)">✏️</button>
+            </div>
+
+            <!-- LOCATION -->
+            <div style="position:relative;">
+                <label class="s-label">Location</label>
+                <input type="text" name="location" class="s-input"
+                       value="<?php echo $user['location'] ?? ''; ?>" disabled>
+                <button type="button" class="edit-btn" onclick="enableEdit(this)">✏️</button>
+            </div>
+
+            <!-- WEBSITE -->
+            <div style="position:relative;">
+                <label class="s-label">Website</label>
+                <input type="url" name="website" class="s-input"
+                       value="<?php echo $user['website'] ?? ''; ?>">
+                <button type="button" class="edit-btn" onclick="enableEdit(this)">✏️</button>
+            </div>
+
+        </div>
+
+        <button class="save-btn">Save Changes</button>
+        </form>
+        <!-- FORM END -->
+
+    </div>
+</div>
+</div>
  
             <!-- Account -->
             <div id="tab-account" class="tab-content">
@@ -335,14 +554,84 @@
         </div>
     </div>
 </div>
- 
+
+<div id="toast" class="toast"></div>
+
 <script>
+document.getElementById("fileInput").addEventListener("change", function() {
+    if (this.files.length > 0) {
+        this.form.submit(); // auto upload on select
+    }
+});
+</script>
+
+<script>
+document.getElementById("fileInput").addEventListener("change", function() {
+    this.form.submit();
+});
+</script>
+
+<script>
+// ✅ TAB SWITCHING (FIXED)
 function switchTab(name, el) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.s-nav-item').forEach(s => s.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    el.classList.add('active');
+
+    const target = document.getElementById('tab-' + name);
+
+    if (!target) {
+        console.error("Tab not found: tab-" + name);
+        return;
+    }
+
+    target.classList.add('active');
+
+    if (el) el.classList.add('active');
 }
+
+// ✅ ENABLE EDIT BUTTON
+function enableEdit(btn) {
+    const input = btn.previousElementSibling;
+
+    if (!input) return;
+
+    input.removeAttribute("disabled");
+    input.focus();
+}
+
+// ✅ TOAST SYSTEM
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+
+    if (!toast) return;
+
+    toast.innerText = message;
+    toast.className = "toast show " + type;
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
+
+// ✅ PAGE LOAD FIX
+document.addEventListener("DOMContentLoaded", () => {
+
+    // FIX: Always show profile tab by default
+    const defaultTab = document.getElementById("tab-profile");
+    if (defaultTab) defaultTab.classList.add("active");
+
+    // Toast from URL params
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("success")) {
+        showToast("Profile updated successfully ✅", "success");
+    }
+
+    if (params.get("error")) {
+        showToast("Something went wrong ❌", "error");
+    }
+
+});
 </script>
 </body>
 </html>

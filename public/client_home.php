@@ -372,35 +372,6 @@ document.addEventListener('click', function(event) {
                     </section>
 
                     <!-- Followed Creators' Updates -->
-                    <section>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">👥 Following Updates</h2>
-                        <div class="space-y-4">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <div class="flex items-center space-x-3 mb-4">
-                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Emma" class="w-10 h-10 rounded-full">
-                                    <div>
-                                        <p class="font-semibold text-gray-900">Emma Wilson</p>
-                                        <p class="text-sm text-gray-500">2 hours ago</p>
-                                    </div>
-                                </div>
-                                <p class="text-gray-700 mb-4">Just finished an amazing portrait session! Can't wait to share the results 📸</p>
-                                <div class="flex items-center space-x-4">
-                                    <button onclick="likePost(this)" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition-colors">
-                                        <span>❤️</span>
-                                        <span class="text-sm">42</span>
-                                    </button>
-                                    <button onclick="commentPost()" class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors">
-                                        <span>💬</span>
-                                        <span class="text-sm">8</span>
-                                    </button>
-                                    <button onclick="sharePost()" class="flex items-center space-x-1 text-gray-500 hover:text-green-500 transition-colors">
-                                        <span>↗️</span>
-                                        <span class="text-sm">3</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                 </div>
             </div>
 
