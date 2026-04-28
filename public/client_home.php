@@ -287,22 +287,7 @@ $result = mysqli_query($conn, $sql);
     <div class="relative overflow-hidden bg-gradient-to-br from-[#6366f1] via-[#a855f7] to-[#ec4899] rounded-2xl p-5 shadow-lg shadow-purple-500/20 group cursor-pointer transition-transform hover:scale-[1.02]">
         <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-colors"></div>
         
-        <div class="relative z-10">
-            <div class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center mb-3 text-white">
-                📸
-            </div>
-            
-            <h4 class="text-white font-bold text-sm leading-tight mb-1">
-                Want to sell your photos?
-            </h4>
-            <p class="text-purple-100 text-[10px] mb-4 opacity-90">
-                Join our community as a Creator and start earning today!
-            </p>
-            
-            <a href="photographer_register.php" class="block w-full bg-white text-center text-[#a855f7] text-[11px] font-bold py-2.5 rounded-xl hover:bg-gray-100 transition-colors shadow-sm">
-                Switch to Creator Mode
-            </a>
-        </div>
+       
     </div>
     
 </div>
