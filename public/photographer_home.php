@@ -381,7 +381,7 @@ document.addEventListener('click', function(event) {
                             <button onclick="editProfile()" class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors font-medium">
                                 Edit Profile
                             </button>
-                            <button onclick="addServices()" class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-black-200 transition-colors font-medium ">
+                            <button onclick="addServices()" class="w-full bg-gray-100 text-black py-2 px-4 rounded-lg hover:bg-black-200 transition-colors font-medium ">
                                 Add Services
                             </button>
                         </div>
@@ -413,18 +413,19 @@ document.addEventListener('click', function(event) {
                     <div class="space-y-3">
                         <div class="space-y-3">
     <div class="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-purple-100 transition-colors border border-blue-100/50">
-        <p class="text-sm font-bold text-black">5 Tips to Improve Lighting</p>
-        <p class="text-xs font-medium text-gray-900 ">Master natural light techniques</p>
-    </div>
+    <p class="text-sm font-bold text-black mb-0.5">5 Tips to Improve Lighting</p>
+    
+    <p class="text-xs font-medium text-black">Master natural light techniques</p>
+</div>
 
     <div class="p-3 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-teal-100 transition-colors border border-green-100/50">
         <p class="text-sm font-bold text-black">Boost Your Portfolio Views</p>
-        <p class="text-xs font-medium text-gray-900 opacity-80">SEO tips for photographers</p>
+        <p class="text-xs font-medium text-black">SEO tips for photographers</p>
     </div>
 
     <div class="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg cursor-pointer hover:from-yellow-100 hover:to-orange-100 transition-colors border border-yellow-100/50">
         <p class="text-sm font-bold text-black">Client Communication</p>
-        <p class="text-xs font-medium text-gray-900 opacity-80">Build lasting relationships</p>
+        <p class="text-xs font-medium text-black">Build lasting relationships</p>
     </div>
 </div>
                     </div>
@@ -661,7 +662,7 @@ document.addEventListener('click', function(event) {
     <div class="flex justify-between items-center mb-4">
         <h3 class="font-semibold text-gray-900">💡 Recommended Creators</h3>
         <a href="search.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
-            View More <span>→</span>
+             <span>→</span>
         </a>
     </div>
 
@@ -704,12 +705,12 @@ document.addEventListener('click', function(event) {
                     <h3 class="font-semibold text-gray-900 mb-4">💼 Opportunities</h3>
                     <div class="space-y-3">
                         <div class="p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-emerald-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Wedding Photography</p>
+                            <p class="text-sm font-medium text-black">Wedding Photography</p>
                             <p class="text-xs text-gray-600">Delhi • ₹25,000 - ₹40,000</p>
                             <p class="text-xs text-green-600 font-medium">2 days ago</p>
                         </div>
                         <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-cyan-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Product Shoot</p>
+                            <p class="text-sm font-medium text-black">Product Shoot</p>
                             <p class="text-xs text-gray-600">Mumbai • ₹15,000 - ₹25,000</p>
                             <p class="text-xs text-blue-600 font-medium">5 days ago</p>
                         </div>
