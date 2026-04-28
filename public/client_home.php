@@ -691,5 +691,56 @@ document.addEventListener('click', (e) => {
     }
 });
     </script>
+    <footer class="bg-white border-t border-gray-100 pt-12 pb-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
+                    <span class="text-xl font-bold text-white">Capturra</span>
+                </div>
+                <p class="text-sm text-white font-medium opacity-70 leading-relaxed">
+                    Where creators shine. The ultimate community for photographers to showcase, connect, and grow.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Explore</h4>
+                <ul class="space-y-2">
+                    <li><a href="explore.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">All Photos</a></li>
+                    <li><a href="creators.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Top Creators</a></li>
+                    <li><a href="trending.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Trending</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Support</h4>
+                <ul class="space-y-2">
+                    <li><a href="help.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Help Center</a></li>
+                    <li><a href="terms.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Terms of Service</a></li>
+                    <li><a href="privacy.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Stay Connected</h4>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-black hover:bg-purple-600 hover:text-white transition-all">📸</a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-black hover:bg-purple-600 hover:text-white transition-all">🐦</a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-black hover:bg-purple-600 hover:text-white transition-all">🔗</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm font-medium text-white opacity-60 ">
+                © 2026 Capturra. All rights reserved. Made with ❤️ for Photographers.
+            </p>
+            <div class="flex gap-6">
+                <span class="text-xs font-bold text-white uppercase tracking-tighter">Gujarat, India</span>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
