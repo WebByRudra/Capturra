@@ -71,27 +71,27 @@ $result = mysqli_query($conn, $sql);
 
         /* Dark mode overrides */
         .dark body {
-            background-color: #07201f;
-            color: #e6f9f8;
+            background-color: #0a0a0a;
+            color: #f0f0f0;
         }
         .dark nav {
-            background-color: #164a46 !important;
-            border-color: #123936 !important;
+            background-color: #111111 !important;
+            border-color: #222222 !important;
         }
         .dark nav a,
         .dark nav .text-gray-900,
         .dark nav .text-gray-700 {
-            color: #e6f9f8 !important;
+            color: #f0f0f0 !important;
         }
         .dark .bg-white {
-            background-color: #0f2a29 !important;
-            color: #e6f9f8 !important;
-            border-color: #123936 !important;
+            background-color: #1a1a1a !important;
+            color: #f0f0f0 !important;
+            border-color: #2a2a2a !important;
         }
-        .dark .text-gray-900 { color: #e6f9f8 !important; }
-        .dark .text-gray-700, .dark .text-gray-500 { color: #cfeae8 !important; }
-        .dark .border-gray-200 { border-color: #123936 !important; }
-        .dark .upload-zone { border-color: #2a6b69 !important; background-color: rgba(22,74,70,0.06) !important; }
+        .dark .text-gray-900 { color: #f0f0f0 !important; }
+        .dark .text-gray-700, .dark .text-gray-500 { color: #bbbbbb !important; }
+        .dark .border-gray-200 { border-color: #2a2a2a !important; }
+        .dark .upload-zone { border-color: #444444 !important; background-color: rgba(255,255,255,0.03) !important; }
         #darkToggle { background: transparent; border: 1px solid transparent; padding: 6px 8px; border-radius: 8px; color: inherit; }
         #darkToggle.active { background: rgba(255,255,255,0.04); }
     </style>
@@ -128,100 +128,107 @@ $result = mysqli_query($conn, $sql);
                     <a href="explore.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Explore</a>
                     <a href="trending.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Trending</a>
                     <a href="creator.php" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Creators</a>
+
+                    <!-- Messages -->
                     <div class="relative inline-block">
-    <div class="relative cursor-pointer group" onclick="toggleMessages(event)">
-        <span class="text-2xl group-hover:scale-110 transition-transform iagenline-block">  💬</span>
-        <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white dark:border-slate-900 notification-dot"></div>
-    </div>
-
-    <div id="msgDropdown" class="hidden absolute right-0 mt-4 w-80 bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl border border-slate-100 dark:border-slate-800 z-[999] overflow-hidden transform origin-top-right transition-all">
-        
-        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30">
-            <h3 class="text-[11px] font-black dark:text-white uppercase tracking-widest text-slate-500">Recent Inquiries</h3>
-            <span class="bg-purple-600 text-white text-[9px] px-2 py-0.5 rounded-full font-black animate-pulse">NEW</span>
-        </div>
-
-        <div class="max-h-[380px] overflow-y-auto">
-            <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all border-b border-slate-50 dark:border-slate-800/50">
-                <div class="flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-2xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black text-sm">
-                            JD
+                        <div class="relative cursor-pointer group" onclick="toggleMessages(event)">
+                            <span class="text-2xl group-hover:scale-110 transition-transform inline-block">💬</span>
+                            <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white notification-dot"></div>
                         </div>
-                        <div>
-                            <h4 class="text-xs font-black dark:text-white text-slate-800">John Doe</h4>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Wedding Inquiry</p>
+
+                        <div id="msgDropdown" class="hidden absolute right-0 mt-4 w-80 bg-white dark:bg-[#1a1a1a] rounded-[2rem] shadow-2xl border border-slate-100 dark:border-[#2a2a2a] z-[999] overflow-hidden transform origin-top-right transition-all">
+                            <div class="p-4 border-b border-slate-100 dark:border-[#2a2a2a] flex justify-between items-center bg-slate-50/50 dark:bg-[#111]/30">
+                                <h3 class="text-[11px] font-black dark:text-white uppercase tracking-widest text-slate-500">Recent Inquiries</h3>
+                                <span class="bg-purple-600 text-white text-[9px] px-2 py-0.5 rounded-full font-black animate-pulse">NEW</span>
+                            </div>
+                            <div class="max-h-[380px] overflow-y-auto">
+                                <div class="p-4 hover:bg-slate-50 dark:hover:bg-[#222] transition-all border-b border-slate-50 dark:border-[#2a2a2a]">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-11 h-11 rounded-2xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black text-sm">JD</div>
+                                            <div>
+                                                <h4 class="text-xs font-black dark:text-white text-slate-800">John Doe</h4>
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Wedding Inquiry</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <a href="https://wa.me/91XXXXXXXXXX" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#25D366] text-white shadow-lg shadow-green-500/20 hover:scale-110 active:scale-95 transition-all">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                            </a>
+                                            <a href="mailto:john@gmail.com" class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#EA4335] text-white shadow-lg shadow-red-500/20 hover:scale-110 active:scale-95 transition-all">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="messages.php" class="block p-4 text-center text-[10px] font-black text-slate-400 bg-slate-50 dark:bg-[#111]/40 hover:text-purple-600 transition-colors uppercase tracking-[0.2em]">
+                                Open Message Center
+                            </a>
                         </div>
                     </div>
 
-                    <div class="flex gap-2">
-                        <a href="https://wa.me/91XXXXXXXXXX" target="_blank" 
-                           class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#25D366] text-white shadow-lg shadow-green-500/20 hover:scale-110 active:scale-95 transition-all">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                            </svg>
-                        </a>
-                        <a href="mailto:john@gmail.com" 
-                           class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#EA4335] text-white shadow-lg shadow-red-500/20 hover:scale-110 active:scale-95 transition-all">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            </div>
-
-        <a href="messages.php" class="block p-4 text-center text-[10px] font-black text-slate-400 bg-slate-50 dark:bg-slate-800/40 hover:text-purple-600 transition-colors uppercase tracking-[0.2em]">
-            Open Message Center
-        </a>
-    </div>
-</div>
-
-<script>
-function toggleMessages(event) {
-    event.stopPropagation(); // Icon click par hi dropdown khulega
-    const dropdown = document.getElementById('msgDropdown');
-    dropdown.classList.toggle('hidden');
-}
-
-// Close dropdown when clicking anywhere outside
-document.addEventListener('click', function(event) {
-    const dropdown = document.getElementById('msgDropdown');
-    const trigger = event.target.closest('.cursor-pointer');
-    
-    if (!dropdown.classList.contains('hidden') && !dropdown.contains(event.target) && !trigger) {
-        dropdown.classList.add('hidden');
-    }
-});
-</script>
                     <!-- Dark mode toggle -->
                     <button id="darkToggle" title="Toggle dark mode" class="flex items-center justify-center w-9 h-9 rounded-md text-gray-700 hover:bg-gray-100 transition-colors" aria-pressed="false">🌙</button>
-                    
+
                     <!-- Notifications -->
-                    <div class="relative cursor-pointer" onclick="toggleNotifications()">
-                        <svg class="h-6 w-6 text-gray-700 hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM10.07 2.82l3.93 3.93-3.93 3.93-3.93-3.93 3.93-3.93z">🔔</path>
-                        </svg>
-                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full notification-dot"></div>
+                    <div class="relative" id="notifWrapper">
+                        <div class="relative cursor-pointer" onclick="toggleNotifications()">
+                            <svg class="h-6 w-6 text-gray-700 hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                </path>
+                            </svg>
+                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full notification-dot"></div>
+                        </div>
+
+                        <!-- Notification Dropdown -->
+                        <div id="notifDropdown" class="hidden absolute right-0 mt-4 w-80 bg-white dark:bg-[#1a1a1a] rounded-2xl shadow-2xl border border-gray-100 dark:border-[#2a2a2a] z-[999] overflow-hidden origin-top-right">
+                            <div class="p-4 border-b border-gray-100 dark:border-[#2a2a2a] flex justify-between items-center bg-gray-50/50 dark:bg-[#111]/30">
+                                <h3 class="text-[11px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Notifications</h3>
+                                <span class="bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black animate-pulse">NEW</span>
+                            </div>
+                            <div class="max-h-[380px] overflow-y-auto divide-y divide-gray-50 dark:divide-[#2a2a2a]">
+                                <div class="p-4 hover:bg-gray-50 dark:hover:bg-[#222] transition-all flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 flex-shrink-0">❤️</div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">Sarah Johnson liked your photo</p>
+                                        <p class="text-[10px] text-gray-400 mt-0.5">2 minutes ago</p>
+                                    </div>
+                                </div>
+                                <div class="p-4 hover:bg-gray-50 dark:hover:bg-[#222] transition-all flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-500 flex-shrink-0">💬</div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">Emma Wilson commented on your photo</p>
+                                        <p class="text-[10px] text-gray-400 mt-0.5">15 minutes ago</p>
+                                    </div>
+                                </div>
+                                <div class="p-4 hover:bg-gray-50 dark:hover:bg-[#222] transition-all flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-500 flex-shrink-0">👤</div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">David Park started following you</p>
+                                        <p class="text-[10px] text-gray-400 mt-0.5">1 hour ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="notification.php" class="block p-4 text-center text-[10px] font-black text-gray-400 bg-gray-50 dark:bg-[#111]/40 hover:text-purple-600 transition-colors uppercase tracking-[0.2em]">
+                                View All Notifications
+                            </a>
+                        </div>
                     </div>
                     
                     <!-- Profile Menu -->
                     <div class="relative">
                         <button onclick="toggleProfileMenu()" class="flex items-center space-x-2 focus:outline-none">
-                           <div class="w-8 h-8 rounded-full border-2 border-purple-500 flex items-center justify-center bg-gray-100">
-    <span class="text-gray-400 text-sm">👤</span>
-</div>
-
+                            <div class="w-8 h-8 rounded-full border-2 border-purple-500 flex items-center justify-center bg-gray-100">
+                                <span class="text-gray-400 text-sm">👤</span>
+                            </div>
                         </button>
                         <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
                             <a href="profile.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Profile</a>
                             <a href="settings.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Settings</a>
                             <hr class="my-1">
-                            <button onclick="logout()" 
-  class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50">
-  Logout
-</button>
+                            <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50">Logout</button>
                         </div>
                     </div>
                 </div>
@@ -237,16 +244,10 @@ document.addEventListener('click', function(event) {
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <div class="text-center">
                         <div class="w-16 h-16 rounded-full mx-auto mb-4 border-4 border-purple-500 flex items-center justify-center bg-gray-100">
-    <span class="text-2xl text-gray-400">👤</span>
-</div>
-
-                        <h3 class="font-semibold text-gray-900">
-  <?php echo htmlspecialchars($name); ?>
-</h3>
-<p class="text-sm text-gray-500 mb-4">
-  @<?php echo htmlspecialchars($username); ?>
-</p>
-
+                            <span class="text-2xl text-gray-400">👤</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-900"><?php echo htmlspecialchars($name); ?></h3>
+                        <p class="text-sm text-gray-500 mb-4">@<?php echo htmlspecialchars($username); ?></p>
                         <div class="flex justify-center space-x-4 text-sm">
                             <div class="text-center">
                                 <div class="font-semibold text-gray-900">0</div>
@@ -260,39 +261,25 @@ document.addEventListener('click', function(event) {
                     </div>
                 </div>
 
-                <!-- Upload Shortcut -->
-
-
                 <!-- Quick Links -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">Quick Links</h3>
                     <div class="space-y-2">
                         <a href="blogs.php" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                            </svg>
+                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                             <span class="text-gray-700">Blogs</span>
                         </a>
                         <a href="my_bookings.php" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                            </svg>
+                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                             <span class="text-gray-700">My Bookings</span>
                         </a>
-
-
                         <a href="setting.php" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
+                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             <span class="text-gray-700">Settings</span>
                         </a>
                         <a href="support.php" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z"></path>
-                            </svg>
-                            <span class="text-gray-700"  >Support</span>
+                            <svg class="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z"></path></svg>
+                            <span class="text-gray-700">Support</span>
                         </a>
                     </div>
                 </div>
@@ -301,23 +288,14 @@ document.addEventListener('click', function(event) {
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Hero / Welcome Section -->
-               <div class="gradient-bg rounded-xl p-8 text-white">
-    <h1 class="text-3xl font-bold mb-2">
-        Welcome back, <?php echo htmlspecialchars($name); ?> 👋
-    </h1>
-
-    <p class="text-purple-100 mb-6">Explore photographers and book your next event effortlessly.</p>
-    
-    <div class="flex flex-wrap gap-4">
-        <a href="portfolio.php" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors text-center">
-            View Portfolio
-        </a>
-
-        <a href="booking_calendar.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors text-center">
-            Hire Photographer
-        </a>
-    </div>
-</div>
+                <div class="gradient-bg rounded-xl p-8 text-white">
+                    <h1 class="text-3xl font-bold mb-2">Welcome back, <?php echo htmlspecialchars($name); ?> 👋</h1>
+                    <p class="text-purple-100 mb-6">Explore photographers and book your next event effortlessly.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="portfolio.php" class="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition-colors text-center">View Portfolio</a>
+                        <a href="booking_calendar.php" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors text-center">Hire Photographer</a>
+                    </div>
+                </div>
 
                 <!-- Main Feed -->
                 <div class="space-y-8">
@@ -325,50 +303,33 @@ document.addEventListener('click', function(event) {
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">🔥 Trending Photos</h2>
                         <div class="photo-grid">
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
-    
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
-        
-        <!-- CLICKABLE IMAGE -->
-        <a href="photo.php?id=<?php echo $row['id']; ?>">
-        <!-- Image -->
-    <img src="/Capturra/uploads/<?php echo htmlspecialchars($row['photo_path']); ?>" 
-     class="w-full rounded-t-xl cursor-pointer"
-     style="max-height:300px; object-fit:contain;"
-     onclick="openModal(this.src)">
-
-    </a>
-        <div class="p-4">
-            
-            <!-- USER INFO -->
-            <div class="flex items-center space-x-3 mb-3">
-                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                    👤
-                </div>
-                <div>
-                    <p class="font-semibold text-gray-900">
-                        <?php echo htmlspecialchars($row['username']); ?>
-                    </p>
-                </div>
-            </div>
-
-            <!-- ACTIONS -->
-            <div class="flex items-center space-x-4">
-                <button onclick="likePost(<?php echo $row['id']; ?>, this)" 
-                    class="flex items-center space-x-1 text-gray-500">
-    ❤️              <span class="text-sm"><?php echo $row['like_count']; ?></span>
-                    </button>   
-
-                <button class="flex items-center space-x-1 text-gray-500 hover:text-blue-500">
-                    💬 <span class="text-sm"><?php echo $row['comment_count'] ?? 0; ?></span>
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-<?php } ?>
-</div>
+                            <?php while($row = mysqli_fetch_assoc($result)) { ?>
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
+                                <a href="photo.php?id=<?php echo $row['id']; ?>">
+                                    <img src="/Capturra/<?php echo htmlspecialchars($row['image']); ?>" 
+                                         class="w-full rounded-t-xl cursor-pointer"
+                                         style="max-height:300px; object-fit:contain;"
+                                         onclick="openModal(this.src)">
+                                </a>
+                                <div class="p-4">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">👤</div>
+                                        <div>
+                                            <p class="font-semibold text-gray-900"><?php echo htmlspecialchars($row['username']); ?></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <button onclick="likePost(<?php echo $row['id']; ?>, this)" class="flex items-center space-x-1 text-gray-500">
+                                            ❤️ <span class="text-sm"><?php echo $row['like_count']; ?></span>
+                                        </button>
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-blue-500">
+                                            💬 <span class="text-sm"><?php echo $row['comment_count'] ?? 0; ?></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php } ?>
+                        </div>
                     </section>
 
                     <!-- Followed Creators' Updates -->
@@ -386,16 +347,13 @@ document.addEventListener('click', function(event) {
                                 <p class="text-gray-700 mb-4">Just finished an amazing portrait session! Can't wait to share the results 📸</p>
                                 <div class="flex items-center space-x-4">
                                     <button onclick="likePost(this)" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition-colors">
-                                        <span>❤️</span>
-                                        <span class="text-sm">42</span>
+                                        <span>❤️</span><span class="text-sm">42</span>
                                     </button>
                                     <button onclick="commentPost()" class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition-colors">
-                                        <span>💬</span>
-                                        <span class="text-sm">8</span>
+                                        <span>💬</span><span class="text-sm">8</span>
                                     </button>
                                     <button onclick="sharePost()" class="flex items-center space-x-1 text-gray-500 hover:text-green-500 transition-colors">
-                                        <span>↗️</span>
-                                        <span class="text-sm">3</span>
+                                        <span>↗️</span><span class="text-sm">3</span>
                                     </button>
                                 </div>
                             </div>
@@ -407,46 +365,46 @@ document.addEventListener('click', function(event) {
             <!-- Right Sidebar -->
             <div class="lg:col-span-1 space-y-6">
                 <!-- Top Creators Leaderboard -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">🏆 Top Creators</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">1</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Alex Chen</p>
-                                <p class="text-xs text-gray-500">15.2K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">2</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
-                                <p class="text-xs text-gray-500">12.8K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">3</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Mike Rodriguez</p>
-                                <p class="text-xs text-gray-500">9.5K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                    </div>
-                </div>
+               <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-900">🏆 Top Creators</h3>
+        <a href="creator.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+            View More <span>→</span>
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">1</span>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Alex Chen</p>
+                <p class="text-xs text-gray-500">15.2K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">2</span>
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
+                <p class="text-xs text-gray-500">12.8K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">3</span>
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Mike Rodriguez</p>
+                <p class="text-xs text-gray-500">9.5K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Suggested Creators -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -460,7 +418,6 @@ document.addEventListener('click', function(event) {
                             </div>
                             <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
                         </div>
-                        
                         <div class="flex items-center space-x-3">
                             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Suggested creator" class="w-8 h-8 rounded-full">
                             <div class="flex-1 min-w-0">
@@ -484,8 +441,7 @@ document.addEventListener('click', function(event) {
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 cursor-pointer hover:bg-indigo-200 transition-colors">#Architecture</span>
                     </div>
                 </div>
-                <!-- Right Sidebar -->
-            <div class="lg:col-span-1 space-y-6">
+
                 <!-- Follower Activity -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">👥 Follower Activity</h3>
@@ -498,7 +454,6 @@ document.addEventListener('click', function(event) {
                             </div>
                             <span class="text-red-500">❤️</span>
                         </div>
-                        
                         <div class="flex items-center space-x-4">
                             <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
                             <div class="flex-1">
@@ -507,7 +462,6 @@ document.addEventListener('click', function(event) {
                             </div>
                             <span class="text-blue-500">💬</span>
                         </div>
-                        
                         <div class="flex items-center space-x-4">
                             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Follower" class="w-10 h-10 rounded-full">
                             <div class="flex-1">
@@ -521,19 +475,42 @@ document.addEventListener('click', function(event) {
             </div>
         </div>
     </div>
-    </div>          
-            
-    <!-- Footer -->
 
     <script>
-        // Navigation functions
         function goHome() {
-            alert('Navigating to homepage!');
+            window.location.href = 'client_home.php';
         }
 
-        function toggleNotifications() {
-            alert('Notifications panel would open here!');
+        // ── Messages dropdown ──
+        function toggleMessages(event) {
+            event.stopPropagation();
+            const msgDD = document.getElementById('msgDropdown');
+            const notifDD = document.getElementById('notifDropdown');
+            if (notifDD && !notifDD.classList.contains('hidden')) notifDD.classList.add('hidden');
+            msgDD.classList.toggle('hidden');
         }
+
+        // ── Notifications dropdown ──
+        function toggleNotifications() {
+            const notifDD = document.getElementById('notifDropdown');
+            const msgDD = document.getElementById('msgDropdown');
+            if (msgDD && !msgDD.classList.contains('hidden')) msgDD.classList.add('hidden');
+            notifDD.classList.toggle('hidden');
+        }
+
+        // Close both dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const notifWrapper = document.getElementById('notifWrapper');
+            const notifDD = document.getElementById('notifDropdown');
+            if (notifDD && !notifDD.classList.contains('hidden') && notifWrapper && !notifWrapper.contains(event.target)) {
+                notifDD.classList.add('hidden');
+            }
+
+            const msgDD = document.getElementById('msgDropdown');
+            if (msgDD && !msgDD.classList.contains('hidden') && !event.target.closest('.relative.inline-block')) {
+                msgDD.classList.add('hidden');
+            }
+        });
 
         function toggleProfileMenu() {
             const menu = document.getElementById('profileMenu');
@@ -545,18 +522,9 @@ document.addEventListener('click', function(event) {
             if (menu && !menu.classList.contains('hidden')) menu.classList.add('hidden');
         }
 
-        // Hero section functions
-       
+        function viewPortfolio() { window.location.href = 'portfolio.php'; }
+        function hirePhotographer() { window.location.href = 'booking_calendar.php'; }
 
-        function viewPortfolio() {
-            alert('Navigating to your portfolio!');
-        }
-
-        function hirePhotographer() {
-            alert('Opening photographer hiring interface!');
-        }
-
-        // Post interaction functions
         function likePost(button) {
             const likeCount = button.querySelector('span:last-child');
             const currentCount = parseInt(likeCount.textContent);
@@ -565,15 +533,9 @@ document.addEventListener('click', function(event) {
             button.classList.remove('text-gray-500');
         }
 
-        function commentPost() {
-            alert('Comment dialog would open here! 💬');
-        }
+        function commentPost() { alert('Comment dialog would open here! 💬'); }
+        function sharePost() { alert('Share options would appear here! ↗️'); }
 
-        function sharePost() {
-            alert('Share options would appear here! ↗️');
-        }
-
-        // Creator interaction functions
         function followCreator(button) {
             if (button.textContent === 'Follow') {
                 button.textContent = 'Following';
@@ -590,96 +552,72 @@ document.addEventListener('click', function(event) {
         document.addEventListener('click', function(event) {
             const profileMenu = document.getElementById('profileMenu');
             const profileButton = event.target.closest('button');
-            
             if (!profileButton || !profileButton.onclick || profileButton.onclick.toString().indexOf('toggleProfileMenu') === -1) {
-                profileMenu.classList.add('hidden');
+                if (profileMenu) profileMenu.classList.add('hidden');
             }
         });
 
-        // Search functionality
         document.querySelector('input[type="text"]').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                alert(`Searching for: "${this.value}"`);
+            if (e.key === 'Enter') alert(`Searching for: "${this.value}"`);
+        });
+    </script>
+
+    <script>
+    function logout() {
+        fetch("http://localhost:8888/Capturra/api/auth/logout.php")
+            .then(res => res.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = "/Capturra/public/login.html";
+                } else {
+                    alert("Logout failed");
+                }
+            })
+            .catch(err => { console.error(err); alert("Server error"); });
+    }
+    </script>
+
+    <script>
+    (function(){
+        const btn = document.getElementById('darkToggle');
+        if(!btn) return;
+        const KEY = 'capturra-dark';
+        function applyDark(d){
+            document.documentElement.classList.toggle('dark', d);
+            document.body.classList.toggle('dark', d);
+            btn.setAttribute('aria-pressed', d);
+            btn.textContent = d ? '☀️' : '🌙';
+            if(d) btn.classList.add('active'); else btn.classList.remove('active');
+        }
+        const saved = localStorage.getItem(KEY);
+        const prefers = saved !== null ? saved === '1' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        applyDark(prefers);
+        btn.addEventListener('click', function(){
+            const isDark = !document.documentElement.classList.contains('dark');
+            applyDark(isDark);
+            localStorage.setItem(KEY, isDark ? '1' : '0');
+        });
+    })();
+
+    function likePost(photoId, btn) {
+        fetch("like.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "photo_id=" + photoId
+        })
+        .then(res => res.json())
+        .then(data => {
+            let countSpan = btn.querySelector("span");
+            let count = parseInt(countSpan.textContent);
+            if (data.status === "liked") {
+                countSpan.textContent = count + 1;
+                btn.classList.add("text-red-500");
+            } else {
+                countSpan.textContent = count - 1;
+                btn.classList.remove("text-red-500");
             }
         });
-
-        // Hashtag click functionality
-        document.querySelectorAll('[class*="rounded-full"][class*="cursor-pointer"]').forEach(tag => {
-            tag.addEventListener('click', function() {
-                const tagName = this.textContent;
-                alert(`Exploring ${tagName} photos!`);
-            });
-        });
-
-        btn.classList.add("scale-125");
-setTimeout(() => btn.classList.remove("scale-125"), 150);
+    }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'977391c52447f651',t:'MTc1NjU0OTM3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-
-<script>
-function logout() {
-  fetch("http://localhost:8888/Capturra/api/auth/logout.php")
-    .then(res => res.json())
-    .then(data => {
-      if (data.status) {
-        window.location.href = "/Capturra/public/login.html";
-      } else {
-        alert("Logout failed");
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Server error");
-    });
-}
-</script>
-
-
 </body>
 </html>
-
-<script>
-(function(){
-    const btn = document.getElementById('darkToggle');
-    if(!btn) return;
-    const KEY = 'capturra-dark';
-    function applyDark(d){
-        document.documentElement.classList.toggle('dark', d);
-        document.body.classList.toggle('dark', d);
-        btn.setAttribute('aria-pressed', d);
-        btn.textContent = d ? '☀️' : '🌙';
-        if(d) btn.classList.add('active'); else btn.classList.remove('active');
-    }
-    const saved = localStorage.getItem(KEY);
-    const prefers = saved !== null ? saved === '1' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    applyDark(prefers);
-    btn.addEventListener('click', function(){
-        const isDark = !document.documentElement.classList.contains('dark');
-        applyDark(isDark);
-        localStorage.setItem(KEY, isDark ? '1' : '0');
-    });
-})();
-
-function likePost(photoId, btn) {
-    fetch("like.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "photo_id=" + photoId
-    })
-    .then(res => res.json())
-    .then(data => {
-        let countSpan = btn.querySelector("span");
-        let count = parseInt(countSpan.textContent);
-
-        if (data.status === "liked") {
-            countSpan.textContent = count + 1;
-            btn.classList.add("text-red-500");
-        } else {
-            countSpan.textContent = count - 1;
-            btn.classList.remove("text-red-500");
-        }
-    });
-}
-</script>

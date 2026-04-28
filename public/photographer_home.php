@@ -127,16 +127,15 @@ if (!$result) {
         .post-img { transition: opacity .2s ease-in-out; }
         .post-img:hover { opacity: .5; }
         /* Dark mode overrides (photographer) */
-        .dark body { background-color: #07201f; color: #e6f9f8; }
-        .dark nav { background-color: #164a46 !important; border-color: #123936 !important; }
-        .dark nav a, .dark nav .text-gray-900, .dark nav .text-gray-700 { color: #e6f9f8 !important; }
-        .dark .bg-white { background-color: #0f2a29 !important; color: #e6f9f8 !important; border-color: #123936 !important; }
-        .dark .text-gray-900 { color: #e6f9f8 !important; }
-        .dark .text-gray-700, .dark .text-gray-500 { color: #cfeae8 !important; }
-        .dark .border-gray-200 { border-color: #123936 !important; }
-        .dark .upload-zone { border-color: #2a6b69 !important; background-color: rgba(22,74,70,0.06) !important; }
-        #darkToggle { background: transparent; border: 1px solid transparent; padding: 6px 8px; border-radius: 8px; color: inherit; }
-        #darkToggle.active { background: rgba(255,255,255,0.04); }
+       /* Dark mode overrides (photographer) */
+.dark body { background-color: #0a0a0a; color: #f0f0f0; }
+.dark nav { background-color: #111111 !important; border-color: #222222 !important; }
+.dark nav a, .dark nav .text-gray-900, .dark nav .text-gray-700 { color: #f0f0f0 !important; }
+.dark .bg-white { background-color: #1a1a1a !important; color: #f0f0f0 !important; border-color: #2a2a2a !important; }
+.dark .text-gray-900 { color: #f0f0f0 !important; }
+.dark .text-gray-700, .dark .text-gray-500 { color: #bbbbbb !important; }
+.dark .border-gray-200 { border-color: #2a2a2a !important; }
+.dark .upload-zone { border-color: #444444 !important; background-color: rgba(255,255,255,0.03) !important; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -270,10 +269,47 @@ document.addEventListener('click', function(event) {
 </script>
 
                     <!-- Notifications -->
-                    <div class="relative cursor-pointer" onclick="toggleNotifications()">
-                        <span class="text-2xl hover:scale-110 transition-transform">🔔</span>
-                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full notification-dot"></div>
+                  <div class="relative">
+    <div class="relative cursor-pointer flex items-center" onclick="toggleNotifications(event)">
+        <span class="text-2xl hover:scale-110 transition-transform">🔔</span>
+        <div id="notifDot" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#0d0d11]"></div>
+    </div>
+
+    <div id="notificationMenu" class="hidden absolute right-0 mt-3 w-80 bg-[#16161f] border border-[#2a2a3e] rounded-xl shadow-2xl z-[100] overflow-hidden">
+        <div class="p-4 border-b border-[#2a2a3e] flex justify-between items-center">
+            <h3 class="text-white font-bold text-sm">Notifications</h3>
+            <button onclick="clearNotifDot()" class="text-[10px] text-purple-400 hover:underline">Mark all as read</button>
+        </div>
+        
+        <div class="max-h-64 overflow-y-auto">
+            <div class="p-4 border-b border-[#1e1e2e] hover:bg-[#1e1e2e] transition-colors cursor-pointer">
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">❤️</div>
+                    <div>
+                        <p class="text-sm text-white"><strong>Rahul</strong> liked your photo.</p>
+                        <p class="text-[10px] text-slate-500">2 minutes ago</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-b border-[#1e1e2e] hover:bg-[#1e1e2e] transition-colors cursor-pointer">
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-xs">💬</div>
+                    <div>
+                        <p class="text-sm text-white"><strong>Sneha</strong> commented on your post.</p>
+                        <p class="text-[10px] text-slate-500">1 hour ago</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="emptyNotif" class="hidden p-8 text-center">
+                <p class="text-xs text-slate-500">No new notifications</p>
+            </div>
+        </div>
+
+        <a href="notification.php" class="block p-3 text-center text-xs text-purple-400 hover:bg-[#1e1e2e] font-medium">View all notifications</a>
+    </div>
+</div>
                     
                     <!-- Dark mode toggle -->
                     <button id="darkToggle" title="Toggle dark mode" class="flex items-center justify-center w-9 h-9 rounded-md text-gray-700 hover:bg-gray-100 transition-colors" aria-pressed="false">🌙</button>
@@ -464,11 +500,11 @@ document.addEventListener('click', function(event) {
 
 <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
-   <img src="/Capturra/uploads/<?php echo htmlspecialchars($row['photo_path']);?>" 
+   <!-- Image -->
+   <img src="/Capturra/<?php echo htmlspecialchars($row['image']); ?>" 
      class="w-full rounded-t-xl cursor-pointer"
      style="max-height:300px; object-fit:contain;"
      onclick="openModal(this.src)">
-
     <!-- Like Button -->
     <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
         <form action="../actions/like.php" method="POST">
@@ -575,46 +611,46 @@ document.addEventListener('click', function(event) {
             <div class="lg:col-span-1 space-y-6">
 
                 <!-- Top Creators Leaderboard -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">🏆 Top Creators</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">1</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Alex Chen</p>
-                                <p class="text-xs text-gray-500">25.2K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">2</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
-                                <p class="text-xs text-gray-500">22.8K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3 bg-orange-50 p-2 rounded-lg">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">47</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="You" class="w-8 h-8 rounded-full border-2 border-orange-400">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">You (Ankit)</p>
-                                <p class="text-xs text-gray-500">2.8K followers</p>
-                            </div>
-                            <span class="text-xs text-orange-600 font-medium">Your Rank</span>
-                        </div>
-                    </div>
-                </div>
+              <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-900">🏆 Top Creators</h3>
+        <a href="creator.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+            View More <span>→</span>
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">1</span>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Alex Chen</p>
+                <p class="text-xs text-gray-500">15.2K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">2</span>
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
+                <p class="text-xs text-gray-500">12.8K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">3</span>
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Mike Rodriguez</p>
+                <p class="text-xs text-gray-500">9.5K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Recommended Creators -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -903,6 +939,26 @@ function closeModal() {
     document.getElementById("imageModal").classList.add("hidden");
     document.getElementById("imageModal").classList.remove("flex");
 }
+function toggleNotifications(event) {
+    event.stopPropagation(); // Dropdown click par menu band na ho jaye
+    const menu = document.getElementById('notificationMenu');
+    menu.classList.toggle('hidden');
+    
+    // Notification dot hide karne ke liye jab user menu dekh le
+    // document.getElementById('notifDot').classList.add('hidden');
+}
+
+function clearNotifDot() {
+    document.getElementById('notifDot').classList.add('hidden');
+}
+
+// Bahar click karne par menu close karne ke liye
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('notificationMenu');
+    if (!menu.contains(e.target)) {
+        menu.classList.add('hidden');
+    }
+});
 </script>
 </body>
 </html>

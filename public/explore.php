@@ -132,7 +132,7 @@ $cat_result = $cat_result ?? null;
         </div>
         <div class="masonry">
         <?php while($row = mysqli_fetch_assoc($result)):
-            $filename = basename(str_replace('\\','/',$row['photo_path']));
+            $filename = basename(str_replace('\\','/',$row['image']));
             $img_src  = "/Capturra/uploads/" . $filename;
         ?>
         <div class="photo-card">
