@@ -127,16 +127,15 @@ if (!$result) {
         .post-img { transition: opacity .2s ease-in-out; }
         .post-img:hover { opacity: .5; }
         /* Dark mode overrides (photographer) */
-        .dark body { background-color: #07201f; color: #e6f9f8; }
-        .dark nav { background-color: #164a46 !important; border-color: #123936 !important; }
-        .dark nav a, .dark nav .text-gray-900, .dark nav .text-gray-700 { color: #e6f9f8 !important; }
-        .dark .bg-white { background-color: #0f2a29 !important; color: #e6f9f8 !important; border-color: #123936 !important; }
-        .dark .text-gray-900 { color: #e6f9f8 !important; }
-        .dark .text-gray-700, .dark .text-gray-500 { color: #cfeae8 !important; }
-        .dark .border-gray-200 { border-color: #123936 !important; }
-        .dark .upload-zone { border-color: #2a6b69 !important; background-color: rgba(22,74,70,0.06) !important; }
-        #darkToggle { background: transparent; border: 1px solid transparent; padding: 6px 8px; border-radius: 8px; color: inherit; }
-        #darkToggle.active { background: rgba(255,255,255,0.04); }
+       /* Dark mode overrides (photographer) */
+.dark body { background-color: #0a0a0a; color: #f0f0f0; }
+.dark nav { background-color: #111111 !important; border-color: #222222 !important; }
+.dark nav a, .dark nav .text-gray-900, .dark nav .text-gray-700 { color: #f0f0f0 !important; }
+.dark .bg-white { background-color: #1a1a1a !important; color: #f0f0f0 !important; border-color: #2a2a2a !important; }
+.dark .text-gray-900 { color: #f0f0f0 !important; }
+.dark .text-gray-700, .dark .text-gray-500 { color: #bbbbbb !important; }
+.dark .border-gray-200 { border-color: #2a2a2a !important; }
+.dark .upload-zone { border-color: #444444 !important; background-color: rgba(255,255,255,0.03) !important; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -270,10 +269,47 @@ document.addEventListener('click', function(event) {
 </script>
 
                     <!-- Notifications -->
-                    <div class="relative cursor-pointer" onclick="toggleNotifications()">
-                        <span class="text-2xl hover:scale-110 transition-transform">🔔</span>
-                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full notification-dot"></div>
+                  <div class="relative">
+    <div class="relative cursor-pointer flex items-center" onclick="toggleNotifications(event)">
+        <span class="text-2xl hover:scale-110 transition-transform">🔔</span>
+        <div id="notifDot" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#0d0d11]"></div>
+    </div>
+
+    <div id="notificationMenu" class="hidden absolute right-0 mt-3 w-80 bg-[#16161f] border border-[#2a2a3e] rounded-xl shadow-2xl z-[100] overflow-hidden">
+        <div class="p-4 border-b border-[#2a2a3e] flex justify-between items-center">
+            <h3 class="text-white font-bold text-sm">Notifications</h3>
+            <button onclick="clearNotifDot()" class="text-[10px] text-purple-400 hover:underline">Mark all as read</button>
+        </div>
+        
+        <div class="max-h-64 overflow-y-auto">
+            <div class="p-4 border-b border-[#1e1e2e] hover:bg-[#1e1e2e] transition-colors cursor-pointer">
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">❤️</div>
+                    <div>
+                        <p class="text-sm text-white"><strong>Rahul</strong> liked your photo.</p>
+                        <p class="text-[10px] text-slate-500">2 minutes ago</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-b border-[#1e1e2e] hover:bg-[#1e1e2e] transition-colors cursor-pointer">
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-xs">💬</div>
+                    <div>
+                        <p class="text-sm text-white"><strong>Sneha</strong> commented on your post.</p>
+                        <p class="text-[10px] text-slate-500">1 hour ago</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="emptyNotif" class="hidden p-8 text-center">
+                <p class="text-xs text-slate-500">No new notifications</p>
+            </div>
+        </div>
+
+        <a href="notification.php" class="block p-3 text-center text-xs text-purple-400 hover:bg-[#1e1e2e] font-medium">View all notifications</a>
+    </div>
+</div>
                     
                     <!-- Dark mode toggle -->
                     <button id="darkToggle" title="Toggle dark mode" class="flex items-center justify-center w-9 h-9 rounded-md text-gray-700 hover:bg-gray-100 transition-colors" aria-pressed="false">🌙</button>
@@ -345,7 +381,7 @@ document.addEventListener('click', function(event) {
                             <button onclick="editProfile()" class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors font-medium">
                                 Edit Profile
                             </button>
-                            <button onclick="addServices()" class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                            <button onclick="addServices()" class="w-full bg-gray-100 text-black py-2 px-4 rounded-lg hover:bg-black-200 transition-colors font-medium ">
                                 Add Services
                             </button>
                         </div>
@@ -375,18 +411,23 @@ document.addEventListener('click', function(event) {
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="font-semibold text-gray-900 mb-4">💡 Growth Tips</h3>
                     <div class="space-y-3">
-                        <div class="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-purple-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">5 Tips to Improve Lighting</p>
-                            <p class="text-xs text-gray-600">Master natural light techniques</p>
-                        </div>
-                        <div class="p-3 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-teal-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Boost Your Portfolio Views</p>
-                            <p class="text-xs text-gray-600">SEO tips for photographers</p>
-                        </div>
-                        <div class="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg cursor-pointer hover:from-yellow-100 hover:to-orange-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Client Communication</p>
-                            <p class="text-xs text-gray-600">Build lasting relationships</p>
-                        </div>
+                        <div class="space-y-3">
+    <div class="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-purple-100 transition-colors border border-blue-100/50">
+    <p class="text-sm font-bold text-black mb-0.5">5 Tips to Improve Lighting</p>
+    
+    <p class="text-xs font-medium text-black">Master natural light techniques</p>
+</div>
+
+    <div class="p-3 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-teal-100 transition-colors border border-green-100/50">
+        <p class="text-sm font-bold text-black">Boost Your Portfolio Views</p>
+        <p class="text-xs font-medium text-black">SEO tips for photographers</p>
+    </div>
+
+    <div class="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg cursor-pointer hover:from-yellow-100 hover:to-orange-100 transition-colors border border-yellow-100/50">
+        <p class="text-sm font-bold text-black">Client Communication</p>
+        <p class="text-xs font-medium text-black">Build lasting relationships</p>
+    </div>
+</div>
                     </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -464,11 +505,11 @@ document.addEventListener('click', function(event) {
 
 <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
-   <img src="/Capturra/uploads/<?php echo htmlspecialchars($row['photo_path']);?>" 
+   <!-- Image -->
+   <img src="/Capturra/<?php echo htmlspecialchars($row['image']); ?>" 
      class="w-full rounded-t-xl cursor-pointer"
      style="max-height:300px; object-fit:contain;"
      onclick="openModal(this.src)">
-
     <!-- Like Button -->
     <div class="absolute left-3 top-1/2 transform -translate-y-1/2 z-20">
         <form action="../actions/like.php" method="POST">
@@ -575,70 +616,76 @@ document.addEventListener('click', function(event) {
             <div class="lg:col-span-1 space-y-6">
 
                 <!-- Top Creators Leaderboard -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">🏆 Top Creators</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">1</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Alex Chen</p>
-                                <p class="text-xs text-gray-500">25.2K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">2</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
-                                <p class="text-xs text-gray-500">22.8K followers</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3 bg-orange-50 p-2 rounded-lg">
-                            <div class="flex-shrink-0">
-                                <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">47</span>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="You" class="w-8 h-8 rounded-full border-2 border-orange-400">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">You (Ankit)</p>
-                                <p class="text-xs text-gray-500">2.8K followers</p>
-                            </div>
-                            <span class="text-xs text-orange-600 font-medium">Your Rank</span>
-                        </div>
-                    </div>
-                </div>
+              <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-900">🏆 Top Creators</h3>
+        <a href="creator.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+            View More <span>→</span>
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">1</span>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Alex Chen</p>
+                <p class="text-xs text-gray-500">15.2K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">2</span>
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Sarah Johnson</p>
+                <p class="text-xs text-gray-500">12.8K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">3</span>
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face" alt="Top creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Mike Rodriguez</p>
+                <p class="text-xs text-gray-500">9.5K followers</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Recommended Creators -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">💡 Recommended Creators</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">Emma Wilson</p>
-                                <p class="text-xs text-gray-500">Portrait specialist</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900">David Park</p>
-                                <p class="text-xs text-gray-500">Nature photographer</p>
-                            </div>
-                            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
-                        </div>
-                    </div>
-                </div>
+               <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-900">💡 Recommended Creators</h3>
+        <a href="search.php" class="text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+             <span>→</span>
+        </a>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">Emma Wilson</p>
+                <p class="text-xs text-gray-500">Portrait specialist</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Recommended creator" class="w-8 h-8 rounded-full">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">David Park</p>
+                <p class="text-xs text-gray-500">Nature photographer</p>
+            </div>
+            <button onclick="followCreator(this)" class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors">Follow</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Suggested Hashtags -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -658,12 +705,12 @@ document.addEventListener('click', function(event) {
                     <h3 class="font-semibold text-gray-900 mb-4">💼 Opportunities</h3>
                     <div class="space-y-3">
                         <div class="p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg cursor-pointer hover:from-green-100 hover:to-emerald-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Wedding Photography</p>
+                            <p class="text-sm font-medium text-black">Wedding Photography</p>
                             <p class="text-xs text-gray-600">Delhi • ₹25,000 - ₹40,000</p>
                             <p class="text-xs text-green-600 font-medium">2 days ago</p>
                         </div>
                         <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg cursor-pointer hover:from-blue-100 hover:to-cyan-100 transition-colors">
-                            <p class="text-sm font-medium text-gray-900">Product Shoot</p>
+                            <p class="text-sm font-medium text-black">Product Shoot</p>
                             <p class="text-xs text-gray-600">Mumbai • ₹15,000 - ₹25,000</p>
                             <p class="text-xs text-blue-600 font-medium">5 days ago</p>
                         </div>
@@ -903,6 +950,144 @@ function closeModal() {
     document.getElementById("imageModal").classList.add("hidden");
     document.getElementById("imageModal").classList.remove("flex");
 }
+function toggleNotifications(event) {
+    event.stopPropagation(); // Dropdown click par menu band na ho jaye
+    const menu = document.getElementById('notificationMenu');
+    menu.classList.toggle('hidden');
+    
+    // Notification dot hide karne ke liye jab user menu dekh le
+    // document.getElementById('notifDot').classList.add('hidden');
+}
+
+function clearNotifDot() {
+    document.getElementById('notifDot').classList.add('hidden');
+}
+
+// Bahar click karne par menu close karne ke liye
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('notificationMenu');
+    if (!menu.contains(e.target)) {
+        menu.classList.add('hidden');
+    }
+});
+// Search Bar logic
+const searchInput = document.querySelector('input[type="text"]'); // Apna search input select karein
+const resultsDiv = document.createElement('div');
+resultsDiv.className = "absolute top-full left-0 w-full bg-[#16161f] border border-[#2a2a3e] rounded-xl mt-2 hidden z-50 overflow-hidden shadow-2xl";
+searchInput.parentElement.appendChild(resultsDiv);
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value.trim();
+    if (query.length < 1) {
+        resultsDiv.classList.add('hidden');
+        return;
+    }
+
+    try {
+        const response = await fetch(`search.php?q=${query}`);
+        const data = await response.json();
+
+        let html = '';
+
+        // Users Section
+        if (data.users.length > 0) {
+            html += '<div class="p-2 text-[10px] text-slate-500 uppercase tracking-widest font-bold">Creators</div>';
+            data.users.forEach(user => {
+                html += `
+                    <a href="profile.php?username=${user.username}" class="flex items-center gap-3 p-3 hover:bg-[#1e1e2e] transition-colors border-b border-[#1e1e2e]">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">👤</div>
+                        <div>
+                            <p class="text-sm text-white font-medium">${user.name}</p>
+                            <p class="text-[10px] text-slate-500">@${user.username}</p>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        // Photos Section
+        if (data.photos.length > 0) {
+            html += '<div class="p-2 text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-2">Photos</div>';
+            data.photos.forEach(photo => {
+                html += `
+                    <a href="photo_detail.php?id=${photo.id}" class="flex items-center gap-3 p-3 hover:bg-[#1e1e2e] transition-colors">
+                        <img src="${photo.image_path}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='/Capturra/assets/placeholder.jpg'">
+                        <div>
+                            <p class="text-sm text-white font-medium line-clamp-1">${photo.title}</p>
+                            <p class="text-[10px] text-slate-500">by @${photo.username}</p>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        if (data.users.length === 0 && data.photos.length === 0) {
+            html = '<div class="p-4 text-center text-xs text-slate-500">No results found for "' + query + '"</div>';
+        }
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.classList.remove('hidden');
+
+    } catch (error) {
+        console.error("Search error:", error);
+    }
+});
+
+// Bahar click karne par hide karein
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+        resultsDiv.classList.add('hidden');
+    }
+});
 </script>
+<footer class="bg-white border-t border-gray-100 pt-12 pb-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
+                    <span class="text-xl font-bold text-white">Capturra</span>
+                </div>
+                <p class="text-sm text-white font-medium opacity-70 leading-relaxed">
+                    Where creators shine. The ultimate community for photographers to showcase, connect, and grow.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Explore</h4>
+                <ul class="space-y-2">
+                    <li><a href="explore.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">All Photos</a></li>
+                    <li><a href="creators.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Top Creators</a></li>
+                    <li><a href="trending.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Trending</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Support</h4>
+                <ul class="space-y-2">
+                    <li><a href="help.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Help Center</a></li>
+                    <li><a href="terms.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Terms of Service</a></li>
+                    <li><a href="privacy.php" class="text-sm font-medium text-white hover:text-purple-600 transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Stay Connected</h4>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-black hover:bg-purple-600 hover:text-white transition-all">📸</a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-black hover:bg-purple-600 hover:text-white transition-all">🐦</a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-black hover:bg-purple-600 hover:text-white transition-all">🔗</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm font-medium text-white opacity-60 ">
+                © 2026 Capturra. All rights reserved. Made with ❤️ for Photographers.
+            </p>
+            <div class="flex gap-6">
+                <span class="text-xs font-bold text-white uppercase tracking-tighter">Gujarat, India</span>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
