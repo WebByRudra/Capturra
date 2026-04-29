@@ -606,7 +606,7 @@
                 data.photos.forEach(photo => {
                     html += `
                         <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer transition-colors flex items-center space-x-3" onclick="window.location.href='/Capturra/public/photo.php?id=${photo.id}'">
-                            <img src="${photo.photo_path}" alt="Photo" class="w-12 h-12 object-cover rounded">
+                            <img src="${photo.image}" alt="Photo" class="w-12 h-12 object-cover rounded">
                             <div class="flex-1">
                                 <div class="text-sm text-gray-400">@${photo.username}</div>
                                 <div class="text-white text-sm">${photo.caption || 'Photo'}</div>

@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/session.php";
+secureSessionStart();
 $host = "localhost"; $dbname = "capturra"; $username = "root"; $password = "";
 
 try {

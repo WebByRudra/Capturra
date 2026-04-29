@@ -36,7 +36,7 @@ $comment_count = $hasComments ? "COUNT(DISTINCT comments.id)" : "0";
 $sql = "
 SELECT 
     photos.id,
-    photos.photo_path,
+    photos.image,
     photos.upload_date,
     users.username,
     COUNT(DISTINCT likes.id) AS like_count,

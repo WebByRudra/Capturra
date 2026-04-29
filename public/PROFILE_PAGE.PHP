@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/session.php";
+secureSessionStart();
 
 /* DEFAULT VALUES */
 if(!isset($_SESSION['name'])){

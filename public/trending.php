@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/session.php";
+secureSessionStart();
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -212,7 +213,7 @@ function loadTrending(filter, btn) {
             let html = "";
             response.data.forEach((photo, index) => {
                 // Handle image path correctly
-                const imgName = photo.photo_path.split(/[\\/]/).pop();
+                const imgName = photo.image.split(/[\\/]/).pop();
                 const rank = index + 1;
                 
                 html += `

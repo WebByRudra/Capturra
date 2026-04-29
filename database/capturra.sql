@@ -137,7 +137,7 @@ INSERT INTO `photographers` (`id`, `user_id`, `bio`, `city`, `price_per_day`, `e
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `photo_path` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `upload_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `likes` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -146,7 +146,7 @@ CREATE TABLE `photos` (
 -- Dumping data for table `photos`
 --
 
-INSERT INTO `photos` (`id`, `user_id`, `photo_path`, `upload_date`, `likes`) VALUES
+INSERT INTO `photos` (`id`, `user_id`, `image`, `upload_date`, `likes`) VALUES
 (5, 15, 'uploads/1771000649_ef746145bdb70efe829085b027afa20a.gif', '2026-02-13 16:37:29', 0),
 (6, 15, 'uploads/1771000993_2 (2).png', '2026-02-13 16:43:13', 0),
 (7, 15, 'uploads/1771046725_pic 1.jfif', '2026-02-14 05:25:25', 0),

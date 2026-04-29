@@ -1,6 +1,6 @@
 <?php
 
-$host = "127.0.0.1";   // 🔥 localhost ki jagah ye use karo
+$host = "localhost";   // 🔥 localhost ki jagah ye use karo
 $user = "root";
 $pass = "";
 $db   = "capturra";

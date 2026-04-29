@@ -326,10 +326,10 @@ document.addEventListener('click', function(event) {
                             <a href="photographer_settings.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Settings</a>
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Analytics</a>
                             <hr class="my-1">
-                            <button onclick="logout()" 
-  class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50">
-  Logout
-</button>
+                            <a href="/Capturra/api/logout.php" 
+   class="block px-4 py-2 text-red-600 hover:bg-gray-50">
+   Logout
+</a>
                         </div>
                     </div>
                 </div>
@@ -506,7 +506,8 @@ document.addEventListener('click', function(event) {
 <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
 
    <!-- Image -->
-   <img src="/Capturra/<?php echo htmlspecialchars($row['image']); ?>" 
+   <!-- Image -->
+   <img src="/Capturra/uploads/<?php echo htmlspecialchars($row['image']); ?>"
      class="w-full rounded-t-xl cursor-pointer"
      style="max-height:300px; object-fit:contain;"
      onclick="openModal(this.src)">

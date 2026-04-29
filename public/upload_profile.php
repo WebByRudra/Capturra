@@ -1,6 +1,7 @@
 <?php
 include("../config/database.php");
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/session.php";
+secureSessionStart();
 
 $user_id = $_SESSION['user_id'];
 

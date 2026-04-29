@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/session.php";
+secureSessionStart();
 require_once "../config/database.php";
 
 /* =========================
@@ -85,7 +86,7 @@ if (move_uploaded_file($fileTmp, $targetPath)) {
     /* SAVE ONLY FILE NAME (IMPORTANT FIX) */
     $dbPath = $uniqueName;
 
-    $stmt = $conn->prepare("INSERT INTO photos (user_id, photo_path) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO photos (user_id, image) VALUES (?, ?)");
 
     if (!$stmt) {
         $_SESSION['error'] = "Prepare failed: " . $conn->error;

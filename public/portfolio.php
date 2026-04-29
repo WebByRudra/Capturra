@@ -163,8 +163,8 @@ $photos_query = mysqli_query($conn, "SELECT * FROM photos WHERE user_id = '$p_id
         <div class="masonry">
             <?php while($row = mysqli_fetch_assoc($photos_query)): ?>
                 <div class="masonry-item group relative overflow-hidden rounded-[2rem] bg-zinc-900 reveal cursor-pointer" 
-                     onclick="openLightbox('../<?php echo htmlspecialchars($row['photo_path']); ?>', 'Gallery Moment')">
-                    <img src="../<?php echo htmlspecialchars($row['photo_path']); ?>" class="w-full h-auto transition-all duration-700 group-hover:scale-110">
+                     onclick="openLightbox('../<?php echo htmlspecialchars($row['image']); ?>', 'Gallery Moment')">
+                    <img src="../<?php echo htmlspecialchars($row['image']); ?>" class="w-full h-auto transition-all duration-700 group-hover:scale-110">
                 </div>
             <?php endwhile; ?>
         </div>

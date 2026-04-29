@@ -25,7 +25,7 @@ if (mysqli_num_rows($result) == 0) {
 $photo = mysqli_fetch_assoc($result);
 
 // Normalize photo path
-$photo_filename = basename(str_replace('\\', '/', $photo['photo_path']));
+$photo_filename = basename(str_replace('\\', '/', $photo['image']));
 $img_src = "/Capturra/uploads/" . $photo_filename;
 
 // FETCH COMMENTS

@@ -23,7 +23,7 @@ if($colCheck && mysqli_num_rows($colCheck) > 0){
 
 // Get user's uploads
 $photos = [];
-$pstmt = $conn->prepare("SELECT id, photo_path FROM photos WHERE user_id = ? ORDER BY id DESC LIMIT 50");
+$pstmt = $conn->prepare("SELECT id, image FROM photos WHERE user_id = ? ORDER BY id DESC LIMIT 50");
 $pstmt->bind_param("i", $user_id);
 $pstmt->execute();
 $pres = $pstmt->get_result();
@@ -73,7 +73,7 @@ if($pres){
     <?php else: ?>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <?php foreach($photos as $p):
-            $img = '../' . $p['photo_path'];
+            $img = '../' . $p['image'];
             $imgEsc = htmlspecialchars($img);
             $uploaded = 'Unknown';
             if(file_exists($img)){

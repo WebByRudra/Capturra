@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/Capturra/includes/session.php";
+secureSessionStart();
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -203,7 +204,7 @@ body{
             }
 
             response.data.forEach((photo, index) => {
-                const img = photo.photo_path.split(/[\\/]/).pop();
+                const img = photo.image.split(/[\\/]/).pop();
                 const rank = index + 1;
                 html += `
                 <div class="photo-card">
