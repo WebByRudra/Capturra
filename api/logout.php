@@ -17,5 +17,5 @@ if (ini_get("session.use_cookies")) {
 // Destroy session
 session_destroy();
 
-header("Location: /Capturra/login.php");
+header("Location: /Capturra/public/login.html?logout=1");
 exit();

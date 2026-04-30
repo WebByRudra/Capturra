@@ -326,7 +326,6 @@ $result = mysqli_query($conn, $sql);
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">🔥 Trending Photos</h2>
                         <div class="photo-grid">
-<<<<<<< ours
 <?php while($row = mysqli_fetch_assoc($result)) { ?>
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden card-hover">
         <a href="photo.php?id=<?php echo $row['id']; ?>">

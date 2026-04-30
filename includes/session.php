@@ -3,31 +3,30 @@
 function secureSessionStart() {
 
     // ✅ Prevent multiple session starts
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        return;
+    if (session_status() == PHP_SESSION_NONE) {
+
+        $session_name = 'capturra_secure_session';
+
+        $secure = isset($_SERVER['HTTPS']); // HTTPS check
+        $httponly = true;
+
+        // Force cookies only
+        ini_set('session.use_only_cookies', 1);
+
+        $cookieParams = session_get_cookie_params();
+
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path'     => $cookieParams["path"],
+            'domain'   => $cookieParams["domain"],
+            'secure'   => $secure,
+            'httponly' => $httponly,
+            'samesite' => 'Strict'
+        ]);
+
+        session_name($session_name);
+        session_start();
     }
-
-    $session_name = 'capturra_secure_session';
-
-    $secure = isset($_SERVER['HTTPS']); // HTTPS check
-    $httponly = true;
-
-    // Force cookies only
-    ini_set('session.use_only_cookies', 1);
-
-    $cookieParams = session_get_cookie_params();
-
-    session_set_cookie_params([
-        'lifetime' => 0,
-        'path'     => $cookieParams["path"],
-        'domain'   => $cookieParams["domain"],
-        'secure'   => $secure,
-        'httponly' => $httponly,
-        'samesite' => 'Strict'
-    ]);
-
-    session_name($session_name);
-    session_start();
 
     // ✅ Prevent session fixation
     if (!isset($_SESSION['initiated'])) {
