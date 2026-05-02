@@ -74,9 +74,19 @@ body{
 <img src="https://i.pravatar.cc/200" class="w-28 h-28 rounded-full border-4 border-purple-600">
 
 <div>
-<h1 class="text-2xl font-bold"><?php echo $_SESSION['name']; ?></h1>
-<p class="text-gray-400">@capturra_user</p>
-<p class="text-gray-300 mt-2"><?php echo $_SESSION['bio']; ?></p>
+<h1 class="text-2xl font-bold">
+    <?php echo htmlspecialchars($_SESSION['name'] ?? 'User'); ?>
+</h1>
+
+<p class="text-gray-400">
+    @capturra_user
+</p>
+
+<p class="text-gray-300 mt-2">
+    <?php echo !empty($_SESSION['bio']) 
+        ? htmlspecialchars($_SESSION['bio']) 
+        : 'No bio added yet'; ?>
+</p>
 
 <button onclick="openEdit()" class="mt-3 bg-purple-600 px-4 py-2 rounded">
 Edit Profile
@@ -111,17 +121,34 @@ Professional photographer passionate about storytelling and capturing emotions.
 <!-- EDIT MODAL -->
 <div id="editModal" class="modal">
 
-<form method="POST" class="glass p-6">
-<h2 class="mb-3">Edit Profile</h2>
+    <form method="POST" class="glass p-6">
+        <h2 class="mb-3">Edit Profile</h2>
 
-<input name="name" placeholder="Name"
-value="<?php echo $_SESSION['name']; ?>"
-class="w-full p-2 mb-2 bg-black">
+        <input 
+            type="text"
+            name="name" 
+            placeholder="Name"
+            value="<?php echo htmlspecialchars($_SESSION['name'] ?? ''); ?>"
+            class="w-full p-2 mb-2 bg-black text-white border border-gray-700 rounded"
+        >
 
-<input name="bio" placeholder="Bio"
-value="<?php echo $_SESSION['bio']; ?>"
-class="w-full p-2 mb-2 bg-black">
+        <input 
+            type="text"
+            name="bio" 
+            placeholder="Bio"
+            value="<?php echo htmlspecialchars($_SESSION['bio'] ?? ''); ?>"
+            class="w-full p-2 mb-2 bg-black text-white border border-gray-700 rounded"
+        >
 
+        <button 
+            type="submit"
+            class="w-full p-2 bg-white text-black rounded font-semibold hover:bg-gray-200 transition"
+        >
+            Save Changes
+        </button>
+    </form>
+
+</div>
 <button name="save_profile" class="bg-purple-600 px-4 py-2 rounded">
 Save
 </button>

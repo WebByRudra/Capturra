@@ -32,12 +32,12 @@ try {
     <title>Capturra | Discover</title>
     <script src="https://jquery.com"></script>
     <style>
-        :root { --bg: #061111; --card: #0d1f1f; --purple: #8a2be2; --gold: #ffd700; --white: #fff; }
+        :root { --bg: #000000; --card: #000000; --purple: #8a2be2; --gold: #ffd700; --white: #fff; }
         body { background: var(--bg); color: var(--white); font-family: 'Segoe UI', sans-serif; padding: 40px; margin: 0; }
         
         /* Top 3 Banner */
         .top-banner {
-            background: linear-gradient(135deg, #1a2a2a 0%, #0d1f1f 100%);
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
             padding: 40px; border-radius: 30px; margin-bottom: 50px;
             text-align: center; border: 1px solid rgba(255, 215, 0, 0.3);
         }

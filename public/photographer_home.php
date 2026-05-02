@@ -322,9 +322,9 @@ document.addEventListener('click', function(event) {
 </div>
                         </button>
                         <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                            <a href="photographer_profile.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Profile</a>
-                            <a href="photographer_settings.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Settings</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Analytics</a>
+                            <a href="PROFILE_PAGE.PHP" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Profile</a>
+                            <a href="setting.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Settings</a>
+                            <a href="photographer_analytics.php" onclick="closeProfileMenu()" class="block px-4 py-2 text-gray-700 hover:bg-gray-50">Analytics</a>
                             <hr class="my-1">
                             <a href="/Capturra/api/logout.php" 
    class="block px-4 py-2 text-red-600 hover:bg-gray-50">
